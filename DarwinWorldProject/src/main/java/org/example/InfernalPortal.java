@@ -8,6 +8,7 @@ public class InfernalPortal implements IPositionChangeObserver {
     private int height;
     private ArrayList<Animal> tombs = new ArrayList();
 
+
     public Map<Vector2d, ArrayList<Animal>> getAnimals() {
         return animals;
     }
@@ -15,9 +16,9 @@ public class InfernalPortal implements IPositionChangeObserver {
     protected Map<Vector2d, ArrayList <Animal>> animals = new HashMap<>();
     protected Map<Vector2d, Plant> plants = new HashMap<>();
 
-    public InfernalPortal(int width, int height) {
-        this.width = width;
-        this.height = height;
+    public InfernalPortal( DataSet data) {
+        this.width = data.getWidthOfMap();
+        this.height = data.getHeightOfMap();
 
     }
     // dodac rosliny

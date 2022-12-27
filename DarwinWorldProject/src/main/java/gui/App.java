@@ -21,11 +21,13 @@ public class App extends Application implements IAppObserver {
     private final int SQUARE_SIZE = 30;
     private final int MOVE_DELAY = 1000;
     private Simulation simulation;
+    private DataSet data;
 
 
     public void init() {
-        this.map = new InfernalPortal(10,15);
-        this.simulation = new Simulation(map);
+        this.data = new DataSet("parametry.txt");
+        this.map = new InfernalPortal(this.data);
+        this.simulation = new Simulation(map, this.data);
         simulation.addAppObserver(this);
         simulation.setMoveDelay(MOVE_DELAY);
     }

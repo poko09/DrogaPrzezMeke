@@ -6,20 +6,24 @@ import java.util.List;
 
 public class Simulation implements Runnable {
 
-    public final int STARTING_NUMBER_OF_ANIMALS = 20;
-    public final int STARTING_ENERGY_OF_ANIMAL = 100;
-    public final int STARTING_NUMBER_OF_PLANTS = 20;
+    public final int STARTING_NUMBER_OF_ANIMALS;
+    public final int STARTING_ENERGY_OF_ANIMAL;
+    public final int STARTING_NUMBER_OF_PLANTS;
     private InfernalPortal map;
     private int numberOfAnimals;
     private int numberOfPlants;
-    //uzupelnic logike do tego
+    // ToDo: uzupelnic logike do tego
     private int numberOfFreeFields;
     private ArrayList<Genotype> listOfGenotypes;
     private int avarageEnergyOfAnimals;
     private int moveDelay;
     private List<IAppObserver> appObserverList;
-
-    public Simulation(InfernalPortal map) {
+    private DataSet data;
+    public Simulation(InfernalPortal map, DataSet data) {
+        this.STARTING_NUMBER_OF_ANIMALS = data.getNumberOfAnimals();
+        this.STARTING_ENERGY_OF_ANIMAL = data.getInitialEnergyOfAnimals();
+        this.STARTING_NUMBER_OF_PLANTS = data.getNumberOfPlants();
+        this.data = data;
         this.map = map;
         this.listOfGenotypes = new ArrayList<>();
         this.createAndPlaceAnimalsOnTheMap();
@@ -33,7 +37,7 @@ public class Simulation implements Runnable {
     public void createAndPlaceAnimalsOnTheMap() {
         for (int i = 0; i < STARTING_NUMBER_OF_ANIMALS; i ++) {
             Animal a = new Animal(this.map.generateRandomPositionOnTheMap(), new Gen(0), STARTING_ENERGY_OF_ANIMAL,
-                    new Genotype(),this.map);
+                    new Genotype(this.data),this.map, this.data);
             map.placeAnimalOnTheMap(a,this);
         }
     }

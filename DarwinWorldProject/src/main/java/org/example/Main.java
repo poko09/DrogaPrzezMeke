@@ -1,25 +1,28 @@
 package org.example;
 
+import gui.App;
+import javafx.application.Application;
+
 public class Main {
     public static void main(String[] args) {
 
-        FileUtility fileTest = new FileUtility();
-        fileTest.createFile();
-        String resultToWriteToFile = "Dowolne Parametry, ktore zapiszemy do pliku";
-        fileTest.writeToFIle(resultToWriteToFile);
-
-        DataSet dataset = new DataSet();
-        System.out.println(dataset.getHeightOfMap());
-        System.out.println(dataset);
-
-
+//        FileUtility fileTest = new FileUtility();
+//        fileTest.createFile();
+//        String resultToWriteToFile = "Dowolne Parametry, ktore zapiszemy do pliku";
+//        fileTest.writeToFIle(resultToWriteToFile);
+//
+//        DataSet dataset = new DataSet("parametry.txt");
+//        System.out.println(dataset.getHeightOfMap());
+//        System.out.println(dataset);
 
 
 
 
 
 
-        //Application.launch(App.class, args);
+
+
+        Application.launch(App.class, args);
 //        Genotype genotype = new Genotype();
 //        Genotype genotype2 = new Genotype();
 //        InfernalPortal map = new InfernalPortal(50,50);

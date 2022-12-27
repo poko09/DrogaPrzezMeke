@@ -21,8 +21,8 @@ public class DataSet {
     private int lengthOfGenotype;
     private int behaviourSelection;
 
-    public DataSet() {
-        FileUtility file = new FileUtility();
+    public DataSet(String nameOfFile) {
+        FileUtility file = new FileUtility(nameOfFile);
         Map<String, Integer> allParameters = file.getHashMapFromTextFile();
 
         this.heightOfMap = allParameters.get("heightOfMap");
@@ -42,6 +42,8 @@ public class DataSet {
         this.lengthOfGenotype = allParameters.get("lengthOfGenotype");
         this.behaviourSelection = allParameters.get("behaviourSelection");
     }
+
+
 
     public int getHeightOfMap() {
         return heightOfMap;

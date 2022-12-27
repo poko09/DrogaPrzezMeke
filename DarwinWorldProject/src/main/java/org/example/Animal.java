@@ -13,11 +13,11 @@ public class Animal implements IElement {
     private int age;
     private int numOfChildren;
     private int indexOfActiveGen;
-    private static final int ENERGY_NEEDED_TO_REPRODUCE = 6;
-    private static final int ENERGY_USED_BY_REPRODUCTION = 5;
-    private static final int ENERGY_GAINED_BY_EATING = 1;
-    private static final int ENERGY_USED_BY_MOVING = 1;
-    private static final int ENERGY_GAINED_BY_EATING_PLANT=2;
+    //ToDO: zamienic na uppercasy
+    private final int energyGainedFromPlant;
+    private final int energyRequiredToReproduce;
+    private final int energyUsedByReproduction;
+    private DataSet data;
 
     public Vector2d getPosition() {
         return position;
@@ -31,7 +31,7 @@ public class Animal implements IElement {
         return genotype;
     }
 
-    public Animal(Vector2d position, Gen orientation, int energy, Genotype genotype, InfernalPortal map) {
+    public Animal(Vector2d position, Gen orientation, int energy, Genotype genotype, InfernalPortal map, DataSet data) {
         this.position = position;
         this.orientation = orientation;
         this.energy = energy;
@@ -43,6 +43,11 @@ public class Animal implements IElement {
         this.indexOfActiveGen = 0;
         //to mozna dodac do funkcji place w mapie lepiej
         this.addObserver(this.map);
+        this.energyGainedFromPlant = data.getEnergyFromPlant();
+        this.energyRequiredToReproduce = data.getEnergyRequiredToReproduce();
+        this.energyUsedByReproduction = data.getEnergyUsedToMakeChild();
+        this.data=data;
+
     }
 
 
@@ -52,7 +57,7 @@ public class Animal implements IElement {
     }
 
     public void eat() {
-        this.energy+=ENERGY_GAINED_BY_EATING;
+        this.energy+=energyGainedFromPlant;
     }
 
     public void reduceEnergy(int usedEnergy) {
@@ -78,8 +83,8 @@ public class Animal implements IElement {
     }
 
     private boolean canReproduce(Animal otherAnimal) {
-        return (this.position.equals(otherAnimal.getPosition()) && this.energy >= ENERGY_NEEDED_TO_REPRODUCE &&
-                otherAnimal.getEnergy() >= ENERGY_NEEDED_TO_REPRODUCE);
+        return (this.position.equals(otherAnimal.getPosition()) && this.energy >= this.energyRequiredToReproduce &&
+                otherAnimal.getEnergy() >= this.energyRequiredToReproduce);
     }
 
     public int getAge() {
@@ -88,11 +93,11 @@ public class Animal implements IElement {
 
     public Animal reproduce(Animal otherAnimal) {
         if (this.canReproduce(otherAnimal)) {
-            this.reduceEnergy(ENERGY_USED_BY_REPRODUCTION);
-            otherAnimal.reduceEnergy(ENERGY_USED_BY_REPRODUCTION);
-            int energyOfBabyAnimal = ENERGY_USED_BY_REPRODUCTION * 2;
-            Genotype genotypeOfBaby = new Genotype(this, otherAnimal);
-            Animal babyAnimal = new Animal(this.position, new Gen(0), energyOfBabyAnimal, genotypeOfBaby, this.map);
+            this.reduceEnergy(this.energyUsedByReproduction);
+            otherAnimal.reduceEnergy(this.energyUsedByReproduction);
+            int energyOfBabyAnimal = this.energyUsedByReproduction * 2;
+            Genotype genotypeOfBaby = new Genotype(this, otherAnimal, this.data);
+            Animal babyAnimal = new Animal(this.position, new Gen(0), energyOfBabyAnimal, genotypeOfBaby, this.map, this.data);
             this.numOfChildren+=1;
             otherAnimal.numOfChildren+=1;
 
@@ -133,7 +138,7 @@ public class Animal implements IElement {
             this.teleportToMagicPortal();
         }
         else{
-            this.energy-= ENERGY_USED_BY_MOVING;
+            this.energy-= 1;
             this.informObserversAboutChangedPosition(this.position, newVector);
             this.position = newVector;
         }
@@ -142,7 +147,7 @@ public class Animal implements IElement {
     }
 
     private void teleportToMagicPortal() {
-        this.energy-=ENERGY_USED_BY_REPRODUCTION;
+        this.energy-=this.energyUsedByReproduction;
         Vector2d newPosition = this.map.generateRandomPositionOnTheMap();
         this.informObserversAboutChangedPosition(this.position, newPosition);
         this.position = newPosition;

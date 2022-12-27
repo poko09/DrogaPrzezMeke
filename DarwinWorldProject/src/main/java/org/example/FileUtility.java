@@ -7,8 +7,11 @@ import java.util.Map;
 //FileUtill --> mozna tak klase nazwac
 public class FileUtility {
 
-    final static String filePath = "parametry.txt";
+    private String filePath;
 
+    public FileUtility(String filePath) {
+        this.filePath = filePath;
+    }
 
     public void run() {
 

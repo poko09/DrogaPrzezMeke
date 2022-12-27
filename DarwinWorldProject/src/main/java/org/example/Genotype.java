@@ -5,20 +5,26 @@ import java.util.Arrays;
 import java.util.Random;
 
 public class Genotype {
-    //nazewnictwo
-    private static final int LENGTH_OF_GENOTYPE = 7;
-    private static final int MIN_NUMBER_OF_MUTATED_GENS=0;
-    private static final int MAX_NUMBER_OF_MUTATED_GENS=3;
-    private Gen[] arrayOfGens;
 
-    public Genotype() {
-        this.arrayOfGens = new Gen[LENGTH_OF_GENOTYPE];
-        for (int i=0; i < LENGTH_OF_GENOTYPE; i++) {
+    private final int length_of_genotype;
+    private final int min_number_of_mutated_gens;
+    private final int max_number_of_mutated_gens;
+
+    private Gen[] arrayOfGens;
+    public Genotype(DataSet data) {
+        this.length_of_genotype = data.getLengthOfGenotype();
+        this.min_number_of_mutated_gens = data.getMinNumberOfMutations();
+        this.max_number_of_mutated_gens = data.getMaxNumberOfMutations();
+        this.arrayOfGens = new Gen[length_of_genotype];
+        for (int i = 0; i < length_of_genotype; i++) {
             this.arrayOfGens[i] = new Gen();
         }
     }
 
-    public Genotype(Animal firstParent, Animal secondParent) {
+    public Genotype(Animal firstParent, Animal secondParent, DataSet data) {
+        this.length_of_genotype = data.getLengthOfGenotype();
+        this.min_number_of_mutated_gens = data.getMinNumberOfMutations();
+        this.max_number_of_mutated_gens = data.getMaxNumberOfMutations();
         this.arrayOfGens = this.createGenotypeBasedOnParents(firstParent, secondParent);
         this.mutateGens();
     }
@@ -32,13 +38,14 @@ public class Genotype {
         Animal weakerParent = Animal.weakerAnimal(firstParent,secondParent);
 
         float fractionOfGensFromStrongerParent = (float)strongerParent.getEnergy() / (strongerParent.getEnergy() + weakerParent.getEnergy());
-        int numOfGensFromStrongerParent = (int) (LENGTH_OF_GENOTYPE * fractionOfGensFromStrongerParent);
-        int numOfGensFromWeakerParent = LENGTH_OF_GENOTYPE - numOfGensFromStrongerParent;
-        Gen[] newGenomtype = new Gen[LENGTH_OF_GENOTYPE];
+        int numOfGensFromStrongerParent = (int) (length_of_genotype * fractionOfGensFromStrongerParent);
+        int numOfGensFromWeakerParent = length_of_genotype - numOfGensFromStrongerParent;
+        Gen[] newGenomtype = new Gen[length_of_genotype];
 
         Random rand = new Random();
         int leftOrRight = rand.nextInt(2);
 
+        // ToDo: Podzielic na funkcje
         //jesli 0 to lewa czesc genotypu zostanie wzieta z osobnika silenijeszego
         if (leftOrRight==0) {
             System.out.println( "left from stronger");
@@ -77,12 +84,12 @@ public class Genotype {
     }
 
     public void mutateGens() {
-        int numOfGensToBeMutated = new Random().nextInt((MAX_NUMBER_OF_MUTATED_GENS - MIN_NUMBER_OF_MUTATED_GENS + 1) + MIN_NUMBER_OF_MUTATED_GENS);
+        int numOfGensToBeMutated = new Random().nextInt((max_number_of_mutated_gens - min_number_of_mutated_gens + 1) + min_number_of_mutated_gens);
         System.out.println( "num of gens to be mutated " + numOfGensToBeMutated);
         ArrayList<Integer> gensModified = new ArrayList<>();
         for (int i = 0; i < numOfGensToBeMutated; i++) {
             while (true) {
-                int genMutated = new Random().nextInt(LENGTH_OF_GENOTYPE);
+                int genMutated = new Random().nextInt(length_of_genotype);
                 if (!gensModified.contains(genMutated)) {
                     this.arrayOfGens[genMutated].randomlyChangeGene();
                     gensModified.add(genMutated);
