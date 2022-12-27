@@ -3,7 +3,7 @@ package org.example;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Simulation {
+public class Simulation implements Runnable {
 
     public final int STARTING_NUMBER_OF_ANIMALS = 8;
     public final int STARTING_ENERGY_OF_ANIMAL = 100;
@@ -15,6 +15,7 @@ public class Simulation {
     private int numberOfFreeFields;
     private ArrayList<Genotype> listOfGenotypes;
     private int avarageEnergyOfAnimals;
+    private int moveDelay;
 
     public Simulation(InfernalPortal map) {
         this.map = map;
@@ -22,7 +23,7 @@ public class Simulation {
         this.createAndPlaceAnimalsOnTheMap();
         this.numberOfAnimals = STARTING_NUMBER_OF_ANIMALS;
         this.numberOfPlants = STARTING_NUMBER_OF_PLANTS;
-
+        this.moveDelay = 3000;
 
 
     }
@@ -110,9 +111,15 @@ public class Simulation {
 
     }
 
-    public void wholeSimulation() {
+    public void run() {
         while(true) {
             this.simulationOfOneDay();
+            try {
+                Thread.sleep(this.moveDelay);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
         }
     }
 
