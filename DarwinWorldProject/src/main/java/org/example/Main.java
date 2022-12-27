@@ -8,8 +8,6 @@ public class Main {
 
 
 
-
-
         Application.launch(App.class, args);
 //        Genotype genotype = new Genotype();
 //        Genotype genotype2 = new Genotype();
