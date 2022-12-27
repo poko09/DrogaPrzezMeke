@@ -20,8 +20,14 @@ public class InfernalPortal implements IPositionChangeObserver {
         this.height = height;
 
     }
-    public Object objectAt(Vector2d position) {
+    // dodac rosliny
+    public ArrayList<Animal> objectAt(Vector2d position) {
         return this.animals.get(position);
+    }
+
+
+    public boolean isOccupied(Vector2d position) {
+        return objectAt(position) != null;
     }
 
     public boolean checkIfMagicPortal(Vector2d position) {
@@ -129,7 +135,7 @@ public class InfernalPortal implements IPositionChangeObserver {
         return tombs;
     }
 
-    public void deleteDeadAnimalsFromTheMap() {
+    public void deleteDeadAnimalsFromTheMap(Simulation simulation) {
         // czy mozna jakos lepiej po tym iterowac
         for (ArrayList<Animal> listOfAnimals : animals.values()) {
             ArrayList<Animal> listOfAnimalsCopy = new ArrayList<>();
@@ -138,6 +144,7 @@ public class InfernalPortal implements IPositionChangeObserver {
                 if(animal.getEnergy()<=0) {
                     this.tombs.add(animal);
                     listOfAnimals.remove(animal);
+                    simulation.reduceNumberOfAnimals();
                 }
             }
             }
@@ -146,6 +153,21 @@ public class InfernalPortal implements IPositionChangeObserver {
 //                forEach(listOfAnimals -> listOfAnimals.
 //                removeIf(animal -> animal.getEnergy() <=0));
 
+    }
+
+    //HELPER FUNCTION-> DELTE LATER
+    public void listAllAnimals() {
+        for (Map.Entry<Vector2d, ArrayList<Animal>> set : animals.entrySet()) {
+            System.out.println(set.getKey());
+            for (Animal animal : set.getValue()) {
+                System.out.println(animal.toString2());
+            }
+        }
+    }
+
+    public String toString() {
+        MapVisualizer mapVisualizer = new MapVisualizer(this);
+        return mapVisualizer.draw(new Vector2d(0,0),new Vector2d(this.width, this.height));
     }
 
 }

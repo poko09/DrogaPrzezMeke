@@ -24,7 +24,7 @@ public class Gen {
     }
 
     public void next() {
-        if (rotation >= 0 && rotation <8) {
+        if (rotation >= 0 && rotation <7) {
             this.rotation+=1;
         }
         if (rotation==7) {
