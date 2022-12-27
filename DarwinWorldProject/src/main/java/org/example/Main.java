@@ -3,14 +3,16 @@ package org.example;
 public class Main {
     public static void main(String[] args) {
 
-        FileUtility fileTest = new FileUtility();
-        fileTest.createFile();
-        String resultToWriteToFile = "Dowolne Parametry, ktore zapiszemy do pliku";
-        fileTest.writeToFIle(resultToWriteToFile);
+        ToxicCorpses toxic = new ToxicCorpses(new Vector2d(4,5));
+        System.out.println(toxic.getPosition());
+        ForestedEquatoria equatoria = new ForestedEquatoria(new Vector2d(3,3));
+        System.out.println(equatoria.isAt(new Vector2d(3,4)));
+        //asdasdpoaskdpokaspdok
 
-        DataSet dataset = new DataSet();
-        System.out.println(dataset.getHeightOfMap());
-        System.out.println(dataset);
+
+
+
+
 
 
 
