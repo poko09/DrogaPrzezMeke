@@ -1,11 +1,8 @@
 package org.example;
 
-import gui.App;
-import javafx.application.Application;
-
 public class Main {
     public static void main(String[] args) {
-        Application.launch(App.class, args);
+        //Application.launch(App.class, args);
 //        InfernalPortal map = new InfernalPortal(10,15);
 //        Simulation simulation = new Simulation(map);
 //        simulation.run();
