@@ -3,7 +3,7 @@ package org.example;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Animal {
+public class Animal implements IElement {
     private Vector2d position;
     private Gen orientation;
     private int energy;
@@ -59,18 +59,22 @@ public class Animal {
         this.energy -= usedEnergy;
     }
 
-    @Override
-    public String toString() {
+
+    public String toString2() {
         return "Animal{" +
                 "position=" + position +
                 ", orientation=" + orientation +
                 ", energy=" + energy +
                 ", genotype=" + genotype +
-                ", observerList=" + observerList +
-                ", map=" + map +
                 ", age=" + age +
                 ", numOfChildren=" + numOfChildren +
                 '}';
+    }
+
+    // HELPER FUNCTION
+    @Override
+    public String toString() {
+        return this.orientation.toString();
     }
 
     private boolean canReproduce(Animal otherAnimal) {
@@ -138,7 +142,7 @@ public class Animal {
     }
 
     private void teleportToMagicPortal() {
-        this.energy=-ENERGY_USED_BY_REPRODUCTION;
+        this.energy-=ENERGY_USED_BY_REPRODUCTION;
         Vector2d newPosition = this.map.generateRandomPositionOnTheMap();
         this.informObserversAboutChangedPosition(this.position, newPosition);
         this.position = newPosition;
@@ -171,6 +175,13 @@ public class Animal {
 
     public void addObserver(IPositionChangeObserver observer) {
         this.observerList.add(observer);
+    }
+
+
+
+    @Override
+    public String getNameOfPathElement() {
+        return "src/main/resources/animal.png";
     }
 }
 

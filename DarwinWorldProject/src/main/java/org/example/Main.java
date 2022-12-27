@@ -5,13 +5,15 @@ import javafx.application.Application;
 
 public class Main {
     public static void main(String[] args) {
-
         Application.launch(App.class, args);
+//        InfernalPortal map = new InfernalPortal(10,15);
+//        Simulation simulation = new Simulation(map);
+//        simulation.run();
 //        Genotype genotype = new Genotype();
 //        Genotype genotype2 = new Genotype();
 //        InfernalPortal map = new InfernalPortal(50,50);
-//        Animal a1 = new Animal(new Vector2d(2,2), new Gen(0), -40, genotype,map);
-//        Animal a2 = new Animal(new Vector2d(2,2), new Gen(1), -45, genotype2,map);
+//        Animal a1 = new Animal(new Vector2d(2,2), new Gen(0), 40, genotype,map);
+//        Animal a2 = new Animal(new Vector2d(2,2), new Gen(1), 45, genotype2,map);
 //        Animal a5 = new Animal(new Vector2d(2,2), new Gen(2), 50, genotype2,map);
 //        Animal a3 = new Animal(new Vector2d(2,4), new Gen(3), 40, genotype,map);
 //        Animal a4 = new Animal(new Vector2d(2,4), new Gen(4), 40, genotype2,map);
@@ -21,6 +23,9 @@ public class Main {
 //        map.placeAnimalOnTheMap(a3,simulation);
 //        map.placeAnimalOnTheMap(a4,simulation);
 //        map.placeAnimalOnTheMap(a5,simulation);
+//        System.out.println(map.isOccupied(new Vector2d(2,2)));
+//        System.out.println(map.isOccupied(new Vector2d(2,4)));
+//        System.out.println(map.isOccupied(new Vector2d(2,5)));
 
 
 //        for (Map.Entry<Vector2d, ArrayList<Animal>> set : map.getAnimals().entrySet()) {

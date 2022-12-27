@@ -2,10 +2,11 @@ package org.example;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class Simulation implements Runnable {
 
-    public final int STARTING_NUMBER_OF_ANIMALS = 8;
+    public final int STARTING_NUMBER_OF_ANIMALS = 20;
     public final int STARTING_ENERGY_OF_ANIMAL = 100;
     public final int STARTING_NUMBER_OF_PLANTS = 20;
     private InfernalPortal map;
@@ -16,6 +17,7 @@ public class Simulation implements Runnable {
     private ArrayList<Genotype> listOfGenotypes;
     private int avarageEnergyOfAnimals;
     private int moveDelay;
+    private List<IAppObserver> appObserverList;
 
     public Simulation(InfernalPortal map) {
         this.map = map;
@@ -23,7 +25,7 @@ public class Simulation implements Runnable {
         this.createAndPlaceAnimalsOnTheMap();
         this.numberOfAnimals = STARTING_NUMBER_OF_ANIMALS;
         this.numberOfPlants = STARTING_NUMBER_OF_PLANTS;
-        this.moveDelay = 3000;
+        this.appObserverList = new ArrayList<>();
 
 
     }
@@ -60,10 +62,15 @@ public class Simulation implements Runnable {
     public void moveAllAnimals() {
         HashMap<Vector2d, ArrayList <Animal>> animalsCopy = new HashMap<Vector2d, ArrayList <Animal>>(this.map.getAnimals());
         for (ArrayList<Animal> listOfAnimals : animalsCopy.values()) {
-            for (Animal animal : listOfAnimals) {
+            // created copy to avoid concurrent modification exception
+            ArrayList<Animal> listOfAnimalsCopy = new ArrayList<>(listOfAnimals);
+            for (Animal animal : listOfAnimalsCopy) {
                 animal.move();
             }
         }
+    }
+    public void reduceNumberOfAnimals() {
+        this.numberOfAnimals-=1;
     }
 
     public void reproductionOfAnimal() {
@@ -95,6 +102,9 @@ public class Simulation implements Runnable {
             }
         }
     }
+
+
+
     public void animalsGetsOlder() {
             this.map.getAnimals().values().stream().
             forEach(listOfAnimals -> listOfAnimals.
@@ -102,7 +112,8 @@ public class Simulation implements Runnable {
     }
 
     public void simulationOfOneDay() {
-        this.map.deleteDeadAnimalsFromTheMap();
+        // te funkcje moze jednak lepiej wrzucic do symulacji
+        this.map.deleteDeadAnimalsFromTheMap(this);
         this.moveAllAnimals();
         this.animalsEatPlants();
         this.reproductionOfAnimal();
@@ -110,16 +121,38 @@ public class Simulation implements Runnable {
         this.animalsGetsOlder();
 
     }
-
+    /// sprawdzic czy dziala to co skompilowalam
     public void run() {
-        while(true) {
+        System.out.println( this.map);
+        this.map.listAllAnimals();
+        System.out.println(this.numberOfAnimals);
+        for (int i=0; i < 100; i++) {
+            System.out.println("NEW DAY number: " + i);
             this.simulationOfOneDay();
+            System.out.println( this.map);
+            this.map.listAllAnimals();
+            System.out.println(this.numberOfAnimals);
+            this.informObservers();
             try {
                 Thread.sleep(this.moveDelay);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
 
+        }
+    }
+
+    public void setMoveDelay(int moveDelay) {
+        this.moveDelay = moveDelay;
+    }
+
+    public void addAppObserver(IAppObserver observer) {
+        this.appObserverList.add(observer);
+    }
+
+    public void informObservers() {
+        for (IAppObserver observer: this.appObserverList){
+            observer.positionChangedApp();
         }
     }
 
