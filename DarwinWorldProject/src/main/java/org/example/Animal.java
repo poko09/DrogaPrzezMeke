@@ -2,7 +2,6 @@ package org.example;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class Animal {
     private Vector2d position;
@@ -13,6 +12,7 @@ public class Animal {
     private InfernalPortal map;
     private int age;
     private int numOfChildren;
+    private int indexOfActiveGen;
     private static final int ENERGY_NEEDED_TO_REPRODUCE = 6;
     private static final int ENERGY_USED_BY_REPRODUCTION = 5;
     private static final int ENERGY_GAINED_BY_EATING = 1;
@@ -40,6 +40,9 @@ public class Animal {
         this.age=0;
         this.numOfChildren=0;
         this.observerList = new ArrayList<>();
+        this.indexOfActiveGen = 0;
+        //to mozna dodac do funkcji place w mapie lepiej
+        this.addObserver(this.map);
     }
 
 
@@ -94,7 +97,22 @@ public class Animal {
         return null;
     }
 
+
+    public void setOrientation() {
+        this.orientation = this.genotype.getArrayOfGens()[this.indexOfActiveGen];
+    }
+
+    public void setIndexOfActiveGen() {
+        if (this.indexOfActiveGen < this.genotype.getArrayOfGens().length -1) {
+            this.indexOfActiveGen+=1;
+        }
+        else {
+            this.indexOfActiveGen=0;
+        }
+    }
+
     public void move() {
+        this.setOrientation();
         Vector2d newVector = this.position;
         switch (orientation.getRotation()) {
             case 0 -> newVector = this.position.add(new Vector2d(0,1));
@@ -105,8 +123,6 @@ public class Animal {
             case 5 -> newVector = this.position.add(new Vector2d(-1,-1));
             case 6 -> newVector = this.position.add(new Vector2d(-1,0));
             case 7 -> newVector = this.position.add(new Vector2d(-1,1));
-            default -> {
-            }
         }
         if (this.map.checkIfMagicPortal(newVector)) {
             System.out.println("magic portal");
@@ -117,20 +133,22 @@ public class Animal {
             this.informObserversAboutChangedPosition(this.position, newVector);
             this.position = newVector;
         }
+        this.setIndexOfActiveGen();
 
     }
 
     private void teleportToMagicPortal() {
         this.energy=-ENERGY_USED_BY_REPRODUCTION;
-        int randomX = new Random().nextInt(this.map.getWidth()+1);
-        int randomY = new Random().nextInt(this.map.getHeight()+1);
-        this.informObserversAboutChangedPosition(this.position, new Vector2d(randomX, randomY));
-        this.position = new Vector2d(randomX, randomY);
+        Vector2d newPosition = this.map.generateRandomPositionOnTheMap();
+        this.informObserversAboutChangedPosition(this.position, newPosition);
+        this.position = newPosition;
 
     }
 
 
-
+    public void getOlder() {
+        this.age+=1;
+    }
     private void informObserversAboutChangedPosition(Vector2d oldPosition, Vector2d newPosition) {
         for (IPositionChangeObserver observer : this.observerList) {
             observer.positionChanged(oldPosition, newPosition, this);

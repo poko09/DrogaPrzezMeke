@@ -23,6 +23,10 @@ public class Genotype {
         this.mutateGens();
     }
 
+    public Gen[] getArrayOfGens() {
+        return arrayOfGens;
+    }
+
     private Gen[] createGenotypeBasedOnParents(Animal firstParent, Animal secondParent) {
         Animal strongerParent = Animal.strongerAnimal(firstParent,secondParent);
         Animal weakerParent = Animal.weakerAnimal(firstParent,secondParent);
@@ -90,8 +94,6 @@ public class Genotype {
         }
 
     }
-
-
 
     @Override
     public String toString() {

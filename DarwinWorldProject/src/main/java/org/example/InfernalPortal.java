@@ -1,14 +1,12 @@
 package org.example;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class InfernalPortal implements IPositionChangeObserver {
     private int width;
     private int height;
+    private ArrayList<Animal> tombs = new ArrayList();
 
     public Map<Vector2d, ArrayList<Animal>> getAnimals() {
         return animals;
@@ -42,8 +40,8 @@ public class InfernalPortal implements IPositionChangeObserver {
         return this.animals.get(position).size() > 1;
     }
 
-    public Animal solveDrawWithEating(Vector2d position) {
-        ArrayList<Animal> animals = this.theStrongestAnimalsFromList(this.animals.get(position));
+    public Animal solveDrawWithEatingOrReproducing(ArrayList<Animal> animals) {
+        animals = this.theStrongestAnimalsFromList(animals);
         if (animals.size() >1) {
             animals = this.theOldestAnimalsFromList(animals);
             if (animals.size() > 1) {
@@ -77,7 +75,7 @@ public class InfernalPortal implements IPositionChangeObserver {
         return animalsWithMostKids;
     }
 
-    public void placeAnimalOnTheMap(Animal animal) {
+    public void placeAnimalOnTheMap(Animal animal, Simulation simulation) {
         if (animals.containsKey(animal.getPosition())) {
             animals.get(animal.getPosition()).add(animal);
         }
@@ -86,9 +84,8 @@ public class InfernalPortal implements IPositionChangeObserver {
             animalsList.add(animal);
             animals.put(animal.getPosition(), animalsList);
         }
-        animal.addObserver(this);
+        simulation.addNewGenotype(animal.getGenotype());
     }
-
 
     public int getWidth() {
         return width;
@@ -100,13 +97,15 @@ public class InfernalPortal implements IPositionChangeObserver {
 
     @Override
     public void positionChanged(Vector2d oldPosition, Vector2d newPosition, Animal animal) {
-        ArrayList<Animal> listOfAnimalsAtThisPosition = (ArrayList<Animal>) this.objectAt(oldPosition);
-
+        ArrayList<Animal> listOfAnimalsAtThisPosition = this.animals.get(oldPosition);
         if (listOfAnimalsAtThisPosition.size() > 1) {
-            listOfAnimalsAtThisPosition.remove(animal);
+            if (listOfAnimalsAtThisPosition.contains(animal)) {
+                listOfAnimalsAtThisPosition.remove(animal);
+            }
+
         }
         else {
-            this.animals.remove(oldPosition);
+                this.animals.remove(oldPosition);
         }
         if (animals.containsKey(newPosition)) {
             animals.get(newPosition).add(animal);
@@ -117,5 +116,38 @@ public class InfernalPortal implements IPositionChangeObserver {
             animals.put(newPosition, animalsList);
         }
 
+        }
+
+
+    public Vector2d generateRandomPositionOnTheMap() {
+        int randomX = new Random().nextInt(this.width+1);
+        int randomY = new Random().nextInt(this.height+1);
+        return new Vector2d(randomX, randomY);
     }
+
+    public ArrayList<Animal> getTombs() {
+        return tombs;
+    }
+
+    public void deleteDeadAnimalsFromTheMap() {
+        // czy mozna jakos lepiej po tym iterowac
+        for (ArrayList<Animal> listOfAnimals : animals.values()) {
+            ArrayList<Animal> listOfAnimalsCopy = new ArrayList<>();
+            listOfAnimalsCopy.addAll(listOfAnimals);
+            for (Animal animal : listOfAnimalsCopy) {
+                if(animal.getEnergy()<=0) {
+                    this.tombs.add(animal);
+                    listOfAnimals.remove(animal);
+                }
+            }
+            }
+        animals.values().removeIf(value -> value.size() == 0);
+//                this.animals.values().stream().
+//                forEach(listOfAnimals -> listOfAnimals.
+//                removeIf(animal -> animal.getEnergy() <=0));
+
+    }
+
 }
+
+
