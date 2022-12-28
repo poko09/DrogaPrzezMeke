@@ -11,6 +11,11 @@ public class Simulation implements Runnable {
     public final int STARTING_NUMBER_OF_PLANTS;
     private InfernalPortal map;
     private int numberOfAnimals;
+
+    public int getNumberOfAnimals() {
+        return numberOfAnimals;
+    }
+
     private int numberOfPlants;
     // ToDo: uzupelnic logike do tego
     private int numberOfFreeFields;
@@ -131,22 +136,16 @@ public class Simulation implements Runnable {
         this.animalsGetsOlder();
 
     }
-    /// sprawdzic czy dziala to co skompilowalam
+
     public void run() {
-//        System.out.println( this.map);
-//        this.map.listAllAnimals();
-//        System.out.println(this.numberOfAnimals);
+
         while(true) {
-//            System.out.println("NEW DAY number: " + i);
             this.simulationOfOneDay();
-//            System.out.println( this.map);
-//            this.map.listAllAnimals();
-//            System.out.println(this.numberOfAnimals);
             this.informObservers();
+
             try {
                 Thread.sleep(this.moveDelay);
             } catch (InterruptedException e) {
-                continue;
             }
 
         }

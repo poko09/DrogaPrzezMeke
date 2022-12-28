@@ -1,27 +1,26 @@
 package org.example;
 
-import java.util.ArrayList;
+import gui.App;
+import javafx.application.Application;
 
 public class Main {
     public static void main(String[] args) {
 
 
 
-        //Application.launch(App.class, args);
+        Application.launch(App.class, args);
 //        Genotype genotype = new Genotype();
 //        Genotype genotype2 = new Genotype();
-        DataSet data = new DataSet("parametry.txt");
-        InfernalPortal map = new InfernalPortal(data);
+//        DataSet data = new DataSet("parametry.txt");
+//        InfernalPortal map = new InfernalPortal(data);
 //        Animal a1 = new Animal(new Vector2d(2,2), new Gen(0), -40, genotype,map);
 //        Animal a2 = new Animal(new Vector2d(2,2), new Gen(1), -45, genotype2,map);
 //        Animal a5 = new Animal(new Vector2d(2,2), new Gen(2), 50, genotype2,map);
 //        Animal a3 = new Animal(new Vector2d(2,4), new Gen(3), 40, genotype,map);
 //        Animal a4 = new Animal(new Vector2d(2,4), new Gen(4), 40, genotype2,map);
-        Simulation simulation = new Simulation(map,data);
-        ArrayList<ArrayList<Animal>> listOfList =map.mostPopularGenotype();
-        for (ArrayList<Animal> list : listOfList) {
-            System.out.println(list.size());
-        }
+//        Simulation simulation = new Simulation(map,data);
+//        ArrayList<Animal> list =map.mostPopularGenotype();
+//        System.out.println(list.size());
 //        map.placeAnimalOnTheMap(a1, simulation);
 //        map.placeAnimalOnTheMap(a2,simulation);
 //        map.placeAnimalOnTheMap(a3,simulation);

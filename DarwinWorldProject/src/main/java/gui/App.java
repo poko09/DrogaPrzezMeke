@@ -3,11 +3,13 @@ package gui;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.example.*;
 
@@ -28,6 +30,8 @@ public class App extends Application implements IAppObserver{
     private boolean animalIsTracked;
     private Animal trackedAnimal;
     private Thread simulationThread;
+
+    private final int RGBSIZE = 255;
 
 
     public void init() {
@@ -56,7 +60,7 @@ public class App extends Application implements IAppObserver{
         this.setButtonFunctions(stopButton,resumeButton, stopTrackingButton, genotypeButton);
 
         this.mainVBox.getChildren().addAll(allButtonshbBox, this.gridPane, this.trackedAnimalLabel);
-        this.drawGridPane();
+        this.drawGridPane(false);
         Scene scene = new Scene(mainVBox, SQUARE_SIZE * (map.getWidth() + 5), SQUARE_SIZE * (map.getHeight() + 5));
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -75,13 +79,19 @@ public class App extends Application implements IAppObserver{
             this.stopTrackingButtonLogic();
         });
         genotypeButton.setOnAction(event -> {
-            this.genotypeButtonLogic();
+            try {
+                this.genotypeButtonLogic();
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
         });
     }
 
-    public void genotypeButtonLogic() {
+    public void genotypeButtonLogic() throws FileNotFoundException {
         if (this.isSuspended) {
-
+            System.out.println("button clicked");
+            gridPane.getChildren().clear();
+            this.drawGridPane(true);
         }
     }
 
@@ -106,15 +116,7 @@ public class App extends Application implements IAppObserver{
             this.trackedAnimal=null;
         }
     }
-    public void ifAnimalIsClicked(Animal animal) {
-        if (this.isSuspended) {
-            this.animalIsTracked=true;
-            this.trackedAnimal=animal;
-            this.trackedAnimalLabel.setText(animal.toString());
-        }
 
-
-    }
 
 
     public void drawXY() {
@@ -153,40 +155,64 @@ public class App extends Application implements IAppObserver{
             }
     }
 
-    public void drawObjects() throws FileNotFoundException {
+    public void drawObjects(boolean highlightStrongGenotypes) throws FileNotFoundException {
         int w = 1;
-        for (int i = this.map.getHeight(); i >= 0; i--) {
+        for (int i = this.map.getHeight()-1; i >= 0; i--) {
             int k = 1;
-            for (int j = 0; j <= this.map.getWidth(); j++) {
+            for (int j = 0; j <= this.map.getWidth()-1; j++) {
                 //ToDo: dodac rosliny
+                // w domysle przez zwierzeta
                 if (this.map.isOccupied(new Vector2d(j, i))) {
-                    IElement object = (IElement) this.map.objectAt(new Vector2d(j, i)).get(0);
-                    if (object != null) {
-                        GuiElementBox element = new GuiElementBox(object);
-                        VBox newVBox = element.getVBoxElement();
-                        if (object instanceof Animal && !this.animalIsTracked) {
-                            newVBox.setOnMouseClicked(event -> {
-                                System.out.println("tracked");
-                                this.animalIsTracked=true;
-                                ifAnimalIsClicked((Animal)object);
-                            });
-                        }
+                    for (Animal animal : map.animalObjectAt(new Vector2d(j, i))) {
+                        Button animalButton;
+                        if (highlightStrongGenotypes && animal.getGenotype().equals(this.map.mostPopularGenotype())) {
+                            animalButton = drawAnimal(animal, 255, 0, 0);
+                        } else {
 
-                        gridPane.add(element.getVBoxElement(), k, w);
-                        GridPane.setHalignment(element.getVBoxElement(), HPos.CENTER);
-                        GridPane.setHalignment(element.getVBoxElement(), HPos.CENTER);
+                            int red = 0;
+                            int green = 0;
+                            int blue;
+                            blue = Math.min(RGBSIZE, RGBSIZE - animal.getEnergy());
+                            animalButton = drawAnimal(animal, red, green, blue);
+                        }
+                        gridPane.add(animalButton, k, w);
+                        GridPane.setHalignment(animalButton, HPos.CENTER);
+                        GridPane.setHalignment(animalButton, HPos.CENTER);
+
                     }
+
+
                 }
                 k++;
             }
             w++;
+
         }
     }
 
 
+    public Button drawAnimal(Animal animal, int red, int green, int blue) {
+        Button buttonAnimal = new Button();
+        animalButtonLogic(buttonAnimal, animal);
+        buttonAnimal.setBackground(new Background(new BackgroundFill(Color.rgb(red, green, blue), CornerRadii.EMPTY, Insets.EMPTY)));
+        buttonAnimal.setMinHeight(SQUARE_SIZE-2);
+        buttonAnimal.setMinWidth(SQUARE_SIZE-2);
+        return buttonAnimal;
+    }
+    public void animalButtonLogic(Button buttonAnimal, Animal animal) {
+        buttonAnimal.setOnAction(event -> {
+            if (this.isSuspended) {
+                this.animalIsTracked=true;
+                this.trackedAnimal=animal;
+                this.trackedAnimalLabel.setText(animal.toString());
+            }
+        });
+
+    }
 
 
-    private void drawGridPane() throws FileNotFoundException {
+
+    private void drawGridPane(boolean highlightStrongGenotypes) throws FileNotFoundException {
         this.gridPane.setGridLinesVisible(false);
         this.gridPane.getColumnConstraints().clear();
         this.gridPane.getRowConstraints().clear();
@@ -196,7 +222,7 @@ public class App extends Application implements IAppObserver{
         this.drawXY();
         this.drawXAxis();
         this.drawYAxis();
-        this.drawObjects();
+        this.drawObjects(highlightStrongGenotypes);
 
     }
 
@@ -205,7 +231,7 @@ public class App extends Application implements IAppObserver{
         Platform.runLater(() -> {
             gridPane.getChildren().clear();
             try {
-                drawGridPane();
+                drawGridPane(false);
                 if (animalIsTracked) {
                     this.trackedAnimalLabel.setText(this.trackedAnimal.toString());
                 }
@@ -237,3 +263,6 @@ public class App extends Application implements IAppObserver{
 //        thread.start();
 //    }
 }
+
+
+

@@ -22,18 +22,18 @@ public class InfernalPortal implements IPositionChangeObserver {
 
     }
     // dodac rosliny
-    public ArrayList<Animal> objectAt(Vector2d position) {
+    public ArrayList<Animal> animalObjectAt(Vector2d position) {
         return this.animals.get(position);
     }
 
 
     public boolean isOccupied(Vector2d position) {
-        return objectAt(position) != null;
+        return animalObjectAt(position) != null;
     }
 
     public boolean checkIfMagicPortal(Vector2d position) {
 
-        if (!position.precedes(new Vector2d(this.width, this.height)) || !position.follows(new Vector2d(0, 0))) {
+        if (!position.precedes(new Vector2d(this.width-1, this.height-1)) || !position.follows(new Vector2d(0, 0))) {
             return true;
         }
         return false;
@@ -127,8 +127,8 @@ public class InfernalPortal implements IPositionChangeObserver {
 
 
     public Vector2d generateRandomPositionOnTheMap() {
-        int randomX = new Random().nextInt(this.width+1);
-        int randomY = new Random().nextInt(this.height+1);
+        int randomX = new Random().nextInt(this.width);
+        int randomY = new Random().nextInt(this.height);
         return new Vector2d(randomX, randomY);
     }
 
@@ -159,31 +159,35 @@ public class InfernalPortal implements IPositionChangeObserver {
 
 
 
-//    public ArrayList<ArrayList<Animal>> mostPopularGenotype() {
-//        HashMap<Genotype, ArrayList<Animal>> allGenotypes = new HashMap<>();
-//        for (ArrayList<Animal> listOfAnimals : animals.values()) {
-//            for (Animal animal : listOfAnimals) {
-//                if (allGenotypes.containsKey(animal.getGenotype())) {
-//                    allGenotypes.get(animal.getGenotype()).add(animal);
-//                } else {
-//                    ArrayList<Animal> listOfAnimalsWithThatGenotype = new ArrayList<>();
-//                    listOfAnimalsWithThatGenotype.add(animal);
-//                    allGenotypes.put(animal.getGenotype(), listOfAnimalsWithThatGenotype);
-//                }
-//            }
-//        }
-//        // Todo: poprawic to zeby było prosciej
-//        Collection<ArrayList<Animal>> arrayListOfAnimals =  allGenotypes.values();
-//        listComparator comparator = new listComparator();
-//        Collections.sort(arrayListOfAnimals, comparator);
-//        return arrayListOfAnimals;
-//    }
+    public Genotype mostPopularGenotype() {
+        HashMap<Genotype, ArrayList<Animal>> allGenotypes = new HashMap<>();
+
+        for (ArrayList<Animal> listOfAnimals : animals.values()) {
+            for (Animal animal : listOfAnimals) {
+                if (allGenotypes.containsKey(animal.getGenotype())) {
+                    allGenotypes.get(animal.getGenotype()).add(animal);
+                } else {
+                    ArrayList<Animal> listOfAnimalsWithThatGenotype = new ArrayList<>();
+                    listOfAnimalsWithThatGenotype.add(animal);
+                    allGenotypes.put(animal.getGenotype(), listOfAnimalsWithThatGenotype);
+                }
+
+            }
+        }
+        // Todo: poprawic to zeby było prosciej
+        Collection<ArrayList<Animal>> collectionOfAnimals =  allGenotypes.values();
+        ArrayList<ArrayList<Animal>> arrayListOfAnimals = new ArrayList<>(collectionOfAnimals);
+        listComparator comparator = new listComparator();
+        Collections.sort(arrayListOfAnimals, comparator);
+        // ToDo dodac zeby remisy tez sie dodawaly
+        return arrayListOfAnimals.get(0).get(0).getGenotype();
+    }
 
     public class listComparator implements Comparator<ArrayList<Animal>> {
 
         @Override
         public int compare(ArrayList<Animal> o1, ArrayList<Animal> o2) {
-            return o1.size() - o2.size();
+            return o2.size() - o1.size();
         }
     }
 

@@ -49,7 +49,6 @@ public class Genotype {
         // ToDo: Podzielic na funkcje
         //jesli 0 to lewa czesc genotypu zostanie wzieta z osobnika silenijeszego
         if (leftOrRight==0) {
-            System.out.println( "left from stronger");
             for (int i = 0; i < numOfGensFromStrongerParent; i++) {
                 //animal moze miec metode genrate i zeby nie bylo tych funkcji
                 newGenomtype[i] = new Gen(strongerParent.getGenotype().getRotationFromSpecificGen(i));
@@ -108,12 +107,12 @@ public class Genotype {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Genotype genotype = (Genotype) o;
-        return length_of_genotype == genotype.length_of_genotype && min_number_of_mutated_gens == genotype.min_number_of_mutated_gens && max_number_of_mutated_gens == genotype.max_number_of_mutated_gens && Arrays.equals(arrayOfGens, genotype.arrayOfGens);
+        return length_of_genotype == genotype.length_of_genotype && Arrays.equals(arrayOfGens, genotype.arrayOfGens);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(length_of_genotype, min_number_of_mutated_gens, max_number_of_mutated_gens);
+        int result = Objects.hash(length_of_genotype);
         result = 31 * result + Arrays.hashCode(arrayOfGens);
         return result;
     }

@@ -5,12 +5,12 @@ numberOfPlants: 10
 energyFromPlant: 4
 dailyGrowthOfPlants: 10
 plantSelection: 24
-numberOfAnimals: 10
+numberOfAnimals: 5
 initialEnergyOfAnimals: 100
 energyRequiredToReproduce: 7
 energyUsedToMakeChild: 6
 minNumberOfMutations: 0
 maxNumberOfMutations: 3
 mutationSelection: 1
-lengthOfGenotype: 3
+lengthOfGenotype: 7
 behaviourSelection: 1
