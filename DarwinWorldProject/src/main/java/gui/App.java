@@ -5,10 +5,12 @@ import javafx.application.Platform;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.*;
 
@@ -18,10 +20,16 @@ public class App extends Application implements IAppObserver {
 
     private InfernalPortal map;
     private GridPane gridPane = new GridPane();
+    private Label trackedAnimalLabel = new Label();
+    private VBox mainVBox = new VBox();
     private final int SQUARE_SIZE = 30;
     private final int MOVE_DELAY = 1000;
     private Simulation simulation;
     private DataSet data;
+
+    private boolean isSuspended;
+    private boolean animalIsTracked;
+    Animal trackedAnimal;
 
 
     public void init() {
@@ -30,17 +38,51 @@ public class App extends Application implements IAppObserver {
         this.simulation = new Simulation(map, this.data);
         simulation.addAppObserver(this);
         simulation.setMoveDelay(MOVE_DELAY);
+        this.isSuspended =false;
+        this.animalIsTracked=false;
     }
     @Override
     public void start(Stage primaryStage) throws Exception {
-
+        Button stopButton = new Button("Stop/Resume Simulation");
+        Button stopTrackingButton = new Button("Stop tracking");
+        this.mainVBox.getChildren().addAll(stopButton, stopTrackingButton, this.gridPane, this.trackedAnimalLabel);
         this.drawGridPane();
-        Scene scene = new Scene(this.gridPane, SQUARE_SIZE * (map.getWidth() + 1), SQUARE_SIZE * (map.getHeight() + 1));
+        Scene scene = new Scene(mainVBox, SQUARE_SIZE * (map.getWidth() + 2), SQUARE_SIZE * (map.getHeight() + 3));
         primaryStage.setScene(scene);
         primaryStage.show();
         Thread thread = new Thread(simulation);
         thread.start();
+        stopButton.setOnAction(click -> {
+            this.stopButtonLogic(thread);
+        });
+        stopTrackingButton.setOnAction(click -> {
+            this.stopTrackingButtonLogic();
+        });
     }
+    public void stopButtonLogic(Thread thread) {
+        if (this.isSuspended) {
+            thread.resume();
+            this.isSuspended =false;
+        }
+        else {
+            thread.suspend();
+            this.isSuspended =true;
+        }
+    }
+    public void stopTrackingButtonLogic() {
+        if (this.animalIsTracked) {
+            this.animalIsTracked=false;
+            this.trackedAnimalLabel.setText("");
+            this.trackedAnimal=null;
+        }
+    }
+    public void ifAnimalIsClicked(Animal animal) {
+        this.animalIsTracked=true;
+        this.trackedAnimal=animal;
+        this.trackedAnimalLabel.setText(animal.toString());
+
+    }
+
 
     public void drawXY() {
         Label label = new Label("y/x");
@@ -83,10 +125,20 @@ public class App extends Application implements IAppObserver {
         for (int i = this.map.getHeight(); i >= 0; i--) {
             int k = 1;
             for (int j = 0; j <= this.map.getWidth(); j++) {
+                //ToDo: dodac rosliny
                 if (this.map.isOccupied(new Vector2d(j, i))) {
                     IElement object = (IElement) this.map.objectAt(new Vector2d(j, i)).get(0);
                     if (object != null) {
                         GuiElementBox element = new GuiElementBox(object);
+                        VBox newVBox = element.getVBoxElement();
+                        if (object instanceof Animal && !this.animalIsTracked) {
+                            newVBox.setOnMouseClicked(click -> {
+                                System.out.println("tracked");
+                                this.animalIsTracked=true;
+                                ifAnimalIsClicked((Animal)object);
+                            });
+                        }
+
                         gridPane.add(element.getVBoxElement(), k, w);
                         GridPane.setHalignment(element.getVBoxElement(), HPos.CENTER);
                         GridPane.setHalignment(element.getVBoxElement(), HPos.CENTER);
@@ -97,6 +149,7 @@ public class App extends Application implements IAppObserver {
             w++;
         }
     }
+
 
 
 
@@ -120,6 +173,10 @@ public class App extends Application implements IAppObserver {
             gridPane.getChildren().clear();
             try {
                 drawGridPane();
+                if (animalIsTracked) {
+                    this.trackedAnimalLabel.setText(this.trackedAnimal.toString());
+                }
+
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             }

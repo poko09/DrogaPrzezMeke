@@ -143,6 +143,7 @@ public class InfernalPortal implements IPositionChangeObserver {
             listOfAnimalsCopy.addAll(listOfAnimals);
             for (Animal animal : listOfAnimalsCopy) {
                 if(animal.getEnergy()<=0) {
+                    animal.die(simulation);
                     this.tombs.add(animal);
                     listOfAnimals.remove(animal);
                     simulation.reduceNumberOfAnimals();
@@ -161,7 +162,7 @@ public class InfernalPortal implements IPositionChangeObserver {
         for (Map.Entry<Vector2d, ArrayList<Animal>> set : animals.entrySet()) {
             System.out.println(set.getKey());
             for (Animal animal : set.getValue()) {
-                System.out.println(animal.toString2());
+                System.out.println(animal.toString());
             }
         }
     }

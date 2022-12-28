@@ -18,6 +18,9 @@ public class Animal implements IElement {
     private final int energyRequiredToReproduce;
     private final int energyUsedByReproduction;
     private DataSet data;
+    private int numberOfEatedPlants;
+    private boolean isAlive;
+    private int dayOfDeath;
 
     public Vector2d getPosition() {
         return position;
@@ -41,12 +44,15 @@ public class Animal implements IElement {
         this.numOfChildren=0;
         this.observerList = new ArrayList<>();
         this.indexOfActiveGen = 0;
+        this.numberOfEatedPlants=0;
+        this.isAlive=true;
         //to mozna dodac do funkcji place w mapie lepiej
         this.addObserver(this.map);
         this.energyGainedFromPlant = data.getEnergyFromPlant();
         this.energyRequiredToReproduce = data.getEnergyRequiredToReproduce();
         this.energyUsedByReproduction = data.getEnergyUsedToMakeChild();
         this.data=data;
+
 
     }
 
@@ -58,6 +64,7 @@ public class Animal implements IElement {
 
     public void eat() {
         this.energy+=energyGainedFromPlant;
+        this.numberOfEatedPlants+=1;
     }
 
     public void reduceEnergy(int usedEnergy) {
@@ -65,22 +72,26 @@ public class Animal implements IElement {
     }
 
 
-    public String toString2() {
-        return "Animal{" +
-                "position=" + position +
-                ", orientation=" + orientation +
+    public String toString() {
+        String textAnimal = "Animal: " +
+                " active gen=" + orientation +
                 ", energy=" + energy +
                 ", genotype=" + genotype +
                 ", age=" + age +
-                ", numOfChildren=" + numOfChildren +
-                '}';
+                ", numOfChildren=" + numOfChildren;
+        if (this.isAlive) {
+            return textAnimal;
+        } else {
+            return "Animal died on " + this.dayOfDeath + " day of simulation";
+        }
+
     }
 
     // HELPER FUNCTION
-    @Override
-    public String toString() {
-        return this.orientation.toString();
-    }
+//    @Override
+//    public String toString() {
+//        return this.orientation.toString();
+//    }
 
     private boolean canReproduce(Animal otherAnimal) {
         return (this.position.equals(otherAnimal.getPosition()) && this.energy >= this.energyRequiredToReproduce &&
@@ -134,7 +145,7 @@ public class Animal implements IElement {
             case 7 -> newVector = this.position.add(new Vector2d(-1,1));
         }
         if (this.map.checkIfMagicPortal(newVector)) {
-            System.out.println("magic portal");
+            //System.out.println("magic portal");
             this.teleportToMagicPortal();
         }
         else{
@@ -180,6 +191,11 @@ public class Animal implements IElement {
 
     public void addObserver(IPositionChangeObserver observer) {
         this.observerList.add(observer);
+    }
+
+    public void die(Simulation simulation) {
+        this.isAlive = false;
+        this.dayOfDeath = simulation.getDayOfSimulation();
     }
 
 

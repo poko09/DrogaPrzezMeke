@@ -19,6 +19,7 @@ public class Simulation implements Runnable {
     private int moveDelay;
     private List<IAppObserver> appObserverList;
     private DataSet data;
+    private int dayOfSimulation;
     public Simulation(InfernalPortal map, DataSet data) {
         this.STARTING_NUMBER_OF_ANIMALS = data.getNumberOfAnimals();
         this.STARTING_ENERGY_OF_ANIMAL = data.getInitialEnergyOfAnimals();
@@ -30,7 +31,7 @@ public class Simulation implements Runnable {
         this.numberOfAnimals = STARTING_NUMBER_OF_ANIMALS;
         this.numberOfPlants = STARTING_NUMBER_OF_PLANTS;
         this.appObserverList = new ArrayList<>();
-
+        this.dayOfSimulation=0;
 
     }
 
@@ -115,7 +116,12 @@ public class Simulation implements Runnable {
                     forEach(animal -> animal.getOlder()));
     }
 
+    public int getDayOfSimulation() {
+        return dayOfSimulation;
+    }
+
     public void simulationOfOneDay() {
+        this.dayOfSimulation+=1;
         // te funkcje moze jednak lepiej wrzucic do symulacji
         this.map.deleteDeadAnimalsFromTheMap(this);
         this.moveAllAnimals();
@@ -127,20 +133,20 @@ public class Simulation implements Runnable {
     }
     /// sprawdzic czy dziala to co skompilowalam
     public void run() {
-        System.out.println( this.map);
-        this.map.listAllAnimals();
-        System.out.println(this.numberOfAnimals);
-        for (int i=0; i < 100; i++) {
-            System.out.println("NEW DAY number: " + i);
+//        System.out.println( this.map);
+//        this.map.listAllAnimals();
+//        System.out.println(this.numberOfAnimals);
+        while(true) {
+//            System.out.println("NEW DAY number: " + i);
             this.simulationOfOneDay();
-            System.out.println( this.map);
-            this.map.listAllAnimals();
-            System.out.println(this.numberOfAnimals);
+//            System.out.println( this.map);
+//            this.map.listAllAnimals();
+//            System.out.println(this.numberOfAnimals);
             this.informObservers();
             try {
                 Thread.sleep(this.moveDelay);
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                continue;
             }
 
         }

@@ -61,7 +61,7 @@ public class Genotype {
 
         //jesli 1 to prawa czesc genotypu zostanie wzieta z osobnika silenijeszego
         else {
-            System.out.println( "right from stronger");
+            //System.out.println( "right from stronger");
             for (int i = 0; i < numOfGensFromWeakerParent; i++) {
                 newGenomtype[i] = new Gen (weakerParent.getGenotype().getRotationFromSpecificGen(i));
             }
@@ -85,7 +85,7 @@ public class Genotype {
 
     public void mutateGens() {
         int numOfGensToBeMutated = new Random().nextInt((max_number_of_mutated_gens - min_number_of_mutated_gens + 1) + min_number_of_mutated_gens);
-        System.out.println( "num of gens to be mutated " + numOfGensToBeMutated);
+       // System.out.println( "num of gens to be mutated " + numOfGensToBeMutated);
         ArrayList<Integer> gensModified = new ArrayList<>();
         for (int i = 0; i < numOfGensToBeMutated; i++) {
             while (true) {
