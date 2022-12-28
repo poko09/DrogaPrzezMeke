@@ -157,6 +157,8 @@ public class InfernalPortal implements IPositionChangeObserver {
 
     }
 
+
+
 //    public ArrayList<ArrayList<Animal>> mostPopularGenotype() {
 //        HashMap<Genotype, ArrayList<Animal>> allGenotypes = new HashMap<>();
 //        for (ArrayList<Animal> listOfAnimals : animals.values()) {
