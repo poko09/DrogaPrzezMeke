@@ -8,6 +8,11 @@ public class ForestedEquatoria extends Plant{
     }
 
     @Override
+    public String toString() {
+        return "*";
+    }
+
+    @Override
     public String getNameOfPathElement() {
         return "src/main/resources/toxicCorpses.png";
     }

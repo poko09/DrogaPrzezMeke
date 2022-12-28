@@ -80,42 +80,44 @@ public class Simulation implements Runnable {
     public void growthOfNewPlants() {
 
         switch (this.PLANT_SELECTION) {
-            case 1 -> forestedEquatroaiGrowth(this.STARTING_NUMBER_OF_PLANTS);
+            case 1 -> forestedEquatoriaGrowth(this.STARTING_NUMBER_OF_PLANTS);
             case 2 -> toxicCorpsesGrowth(this.STARTING_NUMBER_OF_PLANTS);
-            default -> System.out.println("Podano nieprawidlowa wartosc roliny");
+            default -> System.out.println("Podano nieprawidlowa wartosc rosliny");
         }
     }
-    public void forestedEquatroaiGrowth(int numberOfPlants) {
+    public void forestedEquatoriaGrowth(int numberOfPlants) {
 
+        int width = data.getWidthOfMap();
+        int height = data.getHeightOfMap();
         int insideEquatoria = (int) (0.8 * numberOfPlants);
         int outsideEquatoria = numberOfPlants - insideEquatoria;
 
-        int upperEquatoria = (int) (0.6 * this.HEIGHT_OF_MAP);
-        int lowerEqatoria = (int)(0.4 * this.HEIGHT_OF_MAP);
+        int upperEquatoria = (int) (0.6 * height);
+        int lowerEqatoria = (int)(0.4 * height);
 
         Random rand = new Random();
 
         //        toDo zdekomponuj to byczku!
 
-        for(int i = 0; i <= insideEquatoria; i++) {
+        for(int i = 0; i < insideEquatoria; i++) {
 
-            int x = rand.nextInt(this.WIDTH_OF_MAP);
+            int x = rand.nextInt(width);
             int y = rand.nextInt((upperEquatoria - lowerEqatoria) + 1) + lowerEqatoria;
             ForestedEquatoria fe = new ForestedEquatoria(new Vector2d(x, y));
             map.placeForestedEquatoria(fe);
 
         }
 
-        for(int i = 0; i <= outsideEquatoria; i++) {
+        for(int i = 0; i < outsideEquatoria; i++) {
             if(i%2==0) {
-                int x = rand.nextInt(this.WIDTH_OF_MAP);
-                int y = rand.nextInt((this.HEIGHT_OF_MAP - upperEquatoria)+1) + upperEquatoria;
+                int x = rand.nextInt(width);
+                int y = rand.nextInt((height- upperEquatoria)+1) + upperEquatoria;
                 ForestedEquatoria fe = new ForestedEquatoria(new Vector2d(x, y));
                 map.placeForestedEquatoria(fe);
 
             }
             else {
-                int x = rand.nextInt(this.WIDTH_OF_MAP);
+                int x = rand.nextInt(width);
                 int y = rand.nextInt((lowerEqatoria) + 1);
                 ForestedEquatoria fe = new ForestedEquatoria(new Vector2d(x, y));
                 map.placeForestedEquatoria(fe);
@@ -126,10 +128,14 @@ public class Simulation implements Runnable {
     }
     
     public void toxicCorpsesGrowth(int numberOfPlant) {
+
+        // toDO
         int nonToxicPlaces = (int) (0.8 * numberOfPlant); // preferred place to grow
         int toxicPlaces = numberOfPlant - nonToxicPlaces;
 
         ArrayList<Animal> tombsCopy = this.map.getTombs();
+        ToxicCorpses tx = new ToxicCorpses(new Vector2d(0,0));
+        map.placeToxicCorpsesOnTheMap(tx);
         
 
 
@@ -206,6 +212,7 @@ public class Simulation implements Runnable {
         this.dayOfSimulation+=1;
         // te funkcje moze jednak lepiej wrzucic do symulacji
         this.map.deleteDeadAnimalsFromTheMap(this);
+        this.growthOfNewPlants();
         this.moveAllAnimals();
         this.animalsEatPlants();
         this.reproductionOfAnimal();

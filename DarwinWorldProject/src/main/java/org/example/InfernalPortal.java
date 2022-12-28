@@ -25,11 +25,19 @@ public class InfernalPortal implements IPositionChangeObserver {
     public ArrayList<Animal> objectAt(Vector2d position) {
         return this.animals.get(position);
     }
-
-
     public boolean isOccupied(Vector2d position) {
         return objectAt(position) != null;
     }
+
+    public Object grassAt(Vector2d position) {
+        return this.plants.get(position);
+    }
+    public boolean isOccupiedByGrass(Vector2d position) {
+        return this.plants.containsKey(position);
+    }
+
+
+
 
     public boolean checkIfMagicPortal(Vector2d position) {
 
@@ -83,15 +91,16 @@ public class InfernalPortal implements IPositionChangeObserver {
     }
 
     public void placeToxicCorpsesOnTheMap(ToxicCorpses toxicCorpse) {
-        if (!plants.containsKey(toxicCorpse.getPosition())){
+
             plants.put(toxicCorpse.getPosition(), toxicCorpse);
-        }
+
 
     }
     public void placeForestedEquatoria(ForestedEquatoria forestedEquatoria) {
         if (!plants.containsKey(forestedEquatoria.getPosition())){
             plants.put(forestedEquatoria.getPosition(), forestedEquatoria);
         }
+
     }
 
 
