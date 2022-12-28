@@ -34,6 +34,7 @@ public class Simulation implements Runnable {
         this.map = map;
         this.listOfGenotypes = new ArrayList<>();
         this.createAndPlaceAnimalsOnTheMap();
+        this.growthOfNewPlants();
         this.numberOfAnimals = STARTING_NUMBER_OF_ANIMALS;
         this.appObserverList = new ArrayList<>();
         this.dayOfSimulation=0;
@@ -59,8 +60,17 @@ public class Simulation implements Runnable {
 
         HashMap<Vector2d, ArrayList<Animal>> animalsCopy = new HashMap<Vector2d, ArrayList<Animal>>(this.map.animals);
         for (ArrayList<Animal> listOfAnimals : animalsCopy.values()) {
-                Animal eater = this.map.solveDrawWithEatingOrReproducing(listOfAnimals);
-                eater.eat();
+            if (this.map.getPlants().containsKey(listOfAnimals.get(0))) {
+                if (listOfAnimals.size() > 1) {
+                    Animal eater = this.map.solveDrawWithEatingOrReproducing(listOfAnimals);
+                    eater.eat();
+                }
+                else {
+                    listOfAnimals.get(0).eat();
+                }
+            }
+
+
         }
     }
 
@@ -68,15 +78,15 @@ public class Simulation implements Runnable {
     public void growthOfNewPlants() {
 
         switch (this.PLANT_SELECTION) {
-            case 1 -> forestedEquatroaiGrowth();
-            case 2 -> toxicCorpsesGrowth();
+            case 1 -> forestedEquatroaiGrowth(this.STARTING_NUMBER_OF_PLANTS);
+            case 2 -> toxicCorpsesGrowth(this.STARTING_NUMBER_OF_PLANTS);
             default -> System.out.println("Podano nieprawidlowa wartosc roliny");
         }
     }
-    public void forestedEquatroaiGrowth() {
+    public void forestedEquatroaiGrowth(int numberOfPlants) {
 
-        int insideEquatoria = (int) (0.8 * this.STARTING_NUMBER_OF_PLANTS);
-        int outsideEquatoria = this.STARTING_NUMBER_OF_PLANTS - insideEquatoria;
+        int insideEquatoria = (int) (0.8 * numberOfPlants);
+        int outsideEquatoria = numberOfPlants - insideEquatoria;
 
         int upperEquatoria = (int) (0.6 * this.HEIGHT_OF_MAP);
         int lowerEqatoria = (int)(0.4 * this.HEIGHT_OF_MAP);
@@ -112,9 +122,10 @@ public class Simulation implements Runnable {
 
 
     }
-    public void toxicCorpsesGrowth() {
-        int nonToxicPlaces = (int) (0.8 * this.STARTING_NUMBER_OF_PLANTS); // preferred place to grow
-        int toxicPlaces = this.STARTING_NUMBER_OF_PLANTS - nonToxicPlaces;
+    
+    public void toxicCorpsesGrowth(int numberOfPlant) {
+        int nonToxicPlaces = (int) (0.8 * numberOfPlant); // preferred place to grow
+        int toxicPlaces = numberOfPlant - nonToxicPlaces;
 
         ArrayList<Animal> tombsCopy = this.map.getTombs();
         
@@ -196,7 +207,7 @@ public class Simulation implements Runnable {
         this.moveAllAnimals();
         this.animalsEatPlants();
         this.reproductionOfAnimal();
-        this.growthOfNewPlants();
+        // tu ma byc funkcja rosliny rosna kazdego nia
         this.animalsGetsOlder();
 
     }

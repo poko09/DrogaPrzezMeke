@@ -83,13 +83,13 @@ public class InfernalPortal implements IPositionChangeObserver {
     }
 
     public void placeToxicCorpsesOnTheMap(ToxicCorpses toxicCorpse) {
-        if (plants.containsKey(toxicCorpse.getPosition())){
+        if (!plants.containsKey(toxicCorpse.getPosition())){
             plants.put(toxicCorpse.getPosition(), toxicCorpse);
         }
 
     }
     public void placeForestedEquatoria(ForestedEquatoria forestedEquatoria) {
-        if (plants.containsKey(forestedEquatoria.getPosition())){
+        if (!plants.containsKey(forestedEquatoria.getPosition())){
             plants.put(forestedEquatoria.getPosition(), forestedEquatoria);
         }
     }
@@ -111,6 +111,10 @@ public class InfernalPortal implements IPositionChangeObserver {
 
     public int getWidth() {
         return width;
+    }
+
+    public Map<Vector2d, Plant> getPlants() {
+        return plants;
     }
 
     public int getHeight() {
