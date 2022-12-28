@@ -2,6 +2,7 @@ package org.example;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Random;
 
 public class Genotype {
@@ -100,6 +101,21 @@ public class Genotype {
 
         }
 
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Genotype genotype = (Genotype) o;
+        return length_of_genotype == genotype.length_of_genotype && min_number_of_mutated_gens == genotype.min_number_of_mutated_gens && max_number_of_mutated_gens == genotype.max_number_of_mutated_gens && Arrays.equals(arrayOfGens, genotype.arrayOfGens);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(length_of_genotype, min_number_of_mutated_gens, max_number_of_mutated_gens);
+        result = 31 * result + Arrays.hashCode(arrayOfGens);
+        return result;
     }
 
     @Override

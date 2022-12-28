@@ -12,5 +12,5 @@ energyUsedToMakeChild: 6
 minNumberOfMutations: 0
 maxNumberOfMutations: 3
 mutationSelection: 1
-lengthOfGenotype: 7
+lengthOfGenotype: 3
 behaviourSelection: 1

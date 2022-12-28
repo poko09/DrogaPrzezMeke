@@ -7,16 +7,13 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import org.example.*;
 
 import java.io.FileNotFoundException;
 
-public class App extends Application implements IAppObserver {
+public class App extends Application implements IAppObserver{
 
     private InfernalPortal map;
     private GridPane gridPane = new GridPane();
@@ -29,7 +26,8 @@ public class App extends Application implements IAppObserver {
 
     private boolean isSuspended;
     private boolean animalIsTracked;
-    Animal trackedAnimal;
+    private Animal trackedAnimal;
+    private Thread simulationThread;
 
 
     public void init() {
@@ -40,35 +38,67 @@ public class App extends Application implements IAppObserver {
         simulation.setMoveDelay(MOVE_DELAY);
         this.isSuspended =false;
         this.animalIsTracked=false;
+        this.simulationThread = new Thread(simulation);
+        simulationThread.start();
     }
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Button stopButton = new Button("Stop/Resume Simulation");
+        HBox allButtonshbBox = new HBox();
+        Button stopButton = new Button("Stop Simulation");
+        Button resumeButton = new Button("Resume Simulation");
         Button stopTrackingButton = new Button("Stop tracking");
-        this.mainVBox.getChildren().addAll(stopButton, stopTrackingButton, this.gridPane, this.trackedAnimalLabel);
+        Button genotypeButton = new Button("Most popular genotype");
+
+        allButtonshbBox.setSpacing(10.0);
+        allButtonshbBox.setAlignment(Pos.BOTTOM_CENTER);
+        allButtonshbBox.getChildren().addAll(stopButton,resumeButton, stopTrackingButton, genotypeButton);
+
+        this.setButtonFunctions(stopButton,resumeButton, stopTrackingButton, genotypeButton);
+
+        this.mainVBox.getChildren().addAll(allButtonshbBox, this.gridPane, this.trackedAnimalLabel);
         this.drawGridPane();
-        Scene scene = new Scene(mainVBox, SQUARE_SIZE * (map.getWidth() + 2), SQUARE_SIZE * (map.getHeight() + 3));
+        Scene scene = new Scene(mainVBox, SQUARE_SIZE * (map.getWidth() + 5), SQUARE_SIZE * (map.getHeight() + 5));
         primaryStage.setScene(scene);
         primaryStage.show();
-        Thread thread = new Thread(simulation);
-        thread.start();
-        stopButton.setOnAction(click -> {
-            this.stopButtonLogic(thread);
+
+
+    }
+
+    public void setButtonFunctions(Button stopButton, Button resumeButton, Button stopTrackingButton, Button genotypeButton) {
+        stopButton.setOnAction(event -> {
+            this.stopButtonLogic();
         });
-        stopTrackingButton.setOnAction(click -> {
+        resumeButton.setOnAction(event -> {
+            this.resumeButtonLogic();
+        });
+        stopTrackingButton.setOnAction(event -> {
             this.stopTrackingButtonLogic();
         });
+        genotypeButton.setOnAction(event -> {
+            this.genotypeButtonLogic();
+        });
     }
-    public void stopButtonLogic(Thread thread) {
+
+    public void genotypeButtonLogic() {
         if (this.isSuspended) {
-            thread.resume();
-            this.isSuspended =false;
+
         }
-        else {
-            thread.suspend();
+    }
+
+    public void stopButtonLogic() {
+        if (!this.isSuspended) {
+            this.simulationThread.suspend();
             this.isSuspended =true;
         }
     }
+
+    public void resumeButtonLogic() {
+        if (this.isSuspended) {
+            this.simulationThread.resume();
+            this.isSuspended =false;
+        }
+    }
+
     public void stopTrackingButtonLogic() {
         if (this.animalIsTracked) {
             this.animalIsTracked=false;
@@ -77,9 +107,12 @@ public class App extends Application implements IAppObserver {
         }
     }
     public void ifAnimalIsClicked(Animal animal) {
-        this.animalIsTracked=true;
-        this.trackedAnimal=animal;
-        this.trackedAnimalLabel.setText(animal.toString());
+        if (this.isSuspended) {
+            this.animalIsTracked=true;
+            this.trackedAnimal=animal;
+            this.trackedAnimalLabel.setText(animal.toString());
+        }
+
 
     }
 
@@ -132,7 +165,7 @@ public class App extends Application implements IAppObserver {
                         GuiElementBox element = new GuiElementBox(object);
                         VBox newVBox = element.getVBoxElement();
                         if (object instanceof Animal && !this.animalIsTracked) {
-                            newVBox.setOnMouseClicked(click -> {
+                            newVBox.setOnMouseClicked(event -> {
                                 System.out.println("tracked");
                                 this.animalIsTracked=true;
                                 ifAnimalIsClicked((Animal)object);
@@ -182,4 +215,25 @@ public class App extends Application implements IAppObserver {
             }
         });
     }
+
+//    @Override
+//    public void run() {
+//        this.init();
+//        try {
+//            this.start(new Stage());
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
+
+    //        addNewSimulation.setOnAction(click -> {
+//            System.out.println("new simulation");
+//            this.addNewSimulation();
+//        });
+
+    //    public void addNewSimulation() {
+//        App app = new App();
+//        Thread thread = new Thread(app);
+//        thread.start();
+//    }
 }

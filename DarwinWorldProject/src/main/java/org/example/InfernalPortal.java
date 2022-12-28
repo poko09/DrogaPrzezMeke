@@ -157,6 +157,36 @@ public class InfernalPortal implements IPositionChangeObserver {
 
     }
 
+//    public ArrayList<ArrayList<Animal>> mostPopularGenotype() {
+//        HashMap<Genotype, ArrayList<Animal>> allGenotypes = new HashMap<>();
+//        for (ArrayList<Animal> listOfAnimals : animals.values()) {
+//            for (Animal animal : listOfAnimals) {
+//                if (allGenotypes.containsKey(animal.getGenotype())) {
+//                    allGenotypes.get(animal.getGenotype()).add(animal);
+//                } else {
+//                    ArrayList<Animal> listOfAnimalsWithThatGenotype = new ArrayList<>();
+//                    listOfAnimalsWithThatGenotype.add(animal);
+//                    allGenotypes.put(animal.getGenotype(), listOfAnimalsWithThatGenotype);
+//                }
+//            }
+//        }
+//        // Todo: poprawic to zeby było prosciej
+//        Collection<ArrayList<Animal>> arrayListOfAnimals =  allGenotypes.values();
+//        listComparator comparator = new listComparator();
+//        Collections.sort(arrayListOfAnimals, comparator);
+//        return arrayListOfAnimals;
+//    }
+
+    public class listComparator implements Comparator<ArrayList<Animal>> {
+
+        @Override
+        public int compare(ArrayList<Animal> o1, ArrayList<Animal> o2) {
+            return o1.size() - o2.size();
+        }
+    }
+
+
+
     //HELPER FUNCTION-> DELTE LATER
     public void listAllAnimals() {
         for (Map.Entry<Vector2d, ArrayList<Animal>> set : animals.entrySet()) {
