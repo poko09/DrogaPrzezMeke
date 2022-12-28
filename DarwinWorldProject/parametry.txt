@@ -4,7 +4,7 @@ mapSelection: 1
 numberOfPlants: 10
 energyFromPlant: 4
 dailyGrowthOfPlants: 10
-plantSelection: 24
+plantSelection: 2
 numberOfAnimals: 10
 initialEnergyOfAnimals: 100
 energyRequiredToReproduce: 7

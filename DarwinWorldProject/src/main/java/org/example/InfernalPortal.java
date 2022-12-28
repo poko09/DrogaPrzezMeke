@@ -82,6 +82,20 @@ public class InfernalPortal implements IPositionChangeObserver {
         return animalsWithMostKids;
     }
 
+    public void placeToxicCorpsesOnTheMap(ToxicCorpses toxicCorpse) {
+        if (plants.containsKey(toxicCorpse.getPosition())){
+            plants.put(toxicCorpse.getPosition(), toxicCorpse);
+        }
+
+    }
+    public void placeForestedEquatoria(ForestedEquatoria forestedEquatoria) {
+        if (plants.containsKey(forestedEquatoria.getPosition())){
+            plants.put(forestedEquatoria.getPosition(), forestedEquatoria);
+        }
+    }
+
+
+
     public void placeAnimalOnTheMap(Animal animal, Simulation simulation) {
         if (animals.containsKey(animal.getPosition())) {
             animals.get(animal.getPosition()).add(animal);
