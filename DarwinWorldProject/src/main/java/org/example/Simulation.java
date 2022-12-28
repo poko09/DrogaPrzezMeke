@@ -64,9 +64,11 @@ public class Simulation implements Runnable {
                 if (listOfAnimals.size() > 1) {
                     Animal eater = this.map.solveDrawWithEatingOrReproducing(listOfAnimals);
                     eater.eat();
+                    map.getPlants().remove(eater.getPosition());
                 }
                 else {
                     listOfAnimals.get(0).eat();
+                    map.getPlants().remove(listOfAnimals.get(0).getPosition());
                 }
             }
 
