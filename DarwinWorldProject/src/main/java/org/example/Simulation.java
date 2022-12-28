@@ -3,15 +3,17 @@ package org.example;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 public class Simulation implements Runnable {
 
     public final int STARTING_NUMBER_OF_ANIMALS;
     public final int STARTING_ENERGY_OF_ANIMAL;
     public final int STARTING_NUMBER_OF_PLANTS;
+    public final int PLANT_SELECTION;
     private InfernalPortal map;
     private int numberOfAnimals;
-    private int numberOfPlants;
+
     // ToDo: uzupelnic logike do tego
     private int numberOfFreeFields;
     private ArrayList<Genotype> listOfGenotypes;
@@ -20,18 +22,24 @@ public class Simulation implements Runnable {
     private List<IAppObserver> appObserverList;
     private DataSet data;
     private int dayOfSimulation;
+    private final int HEIGHT_OF_MAP;
+    private final int WIDTH_OF_MAP;
+
     public Simulation(InfernalPortal map, DataSet data) {
         this.STARTING_NUMBER_OF_ANIMALS = data.getNumberOfAnimals();
         this.STARTING_ENERGY_OF_ANIMAL = data.getInitialEnergyOfAnimals();
         this.STARTING_NUMBER_OF_PLANTS = data.getNumberOfPlants();
+        this.PLANT_SELECTION = data.getPlantSelection();
         this.data = data;
         this.map = map;
         this.listOfGenotypes = new ArrayList<>();
         this.createAndPlaceAnimalsOnTheMap();
         this.numberOfAnimals = STARTING_NUMBER_OF_ANIMALS;
-        this.numberOfPlants = STARTING_NUMBER_OF_PLANTS;
         this.appObserverList = new ArrayList<>();
         this.dayOfSimulation=0;
+        this.HEIGHT_OF_MAP = data.getHeightOfMap();
+        this.WIDTH_OF_MAP = data.getWidthOfMap();
+
 
     }
 
@@ -43,14 +51,78 @@ public class Simulation implements Runnable {
         }
     }
 
+    /**
+     * Sprawdzić to - mam watpliwosci
+     *
+     */
+    public void animalsEatPlants() { //  będzie bardzo podobne do reprodukcji
 
-    public void animalsEatPlants() {
-
+        HashMap<Vector2d, ArrayList<Animal>> animalsCopy = new HashMap<Vector2d, ArrayList<Animal>>(this.map.animals);
+        for (ArrayList<Animal> listOfAnimals : animalsCopy.values()) {
+                Animal eater = this.map.solveDrawWithEatingOrReproducing(listOfAnimals);
+                eater.eat();
+        }
     }
+
 
     public void growthOfNewPlants() {
 
+        switch (this.PLANT_SELECTION) {
+            case 1 -> forestedEquatroaiGrowth();
+            case 2 -> toxicCorpsesGrowth();
+            default -> System.out.println("Podano nieprawidlowa wartosc roliny");
+        }
     }
+    public void forestedEquatroaiGrowth() {
+
+        int insideEquatoria = (int) (0.8 * this.STARTING_NUMBER_OF_PLANTS);
+        int outsideEquatoria = this.STARTING_NUMBER_OF_PLANTS - insideEquatoria;
+
+        int upperEquatoria = (int) (0.6 * this.HEIGHT_OF_MAP);
+        int lowerEqatoria = (int)(0.4 * this.HEIGHT_OF_MAP);
+
+        Random rand = new Random();
+
+        //        toDo zdekomponuj to byczku!
+
+        for(int i = 0; i <= insideEquatoria; i++) {
+
+            int x = rand.nextInt(this.WIDTH_OF_MAP);
+            int y = rand.nextInt((upperEquatoria - lowerEqatoria) + 1) + lowerEqatoria;
+            ForestedEquatoria fe = new ForestedEquatoria(new Vector2d(x, y));
+            map.placeForestedEquatoria(fe);
+
+        }
+
+        for(int i = 0; i <= outsideEquatoria; i++) {
+            if(i%2==0) {
+                int x = rand.nextInt(this.WIDTH_OF_MAP);
+                int y = rand.nextInt((this.HEIGHT_OF_MAP - upperEquatoria)+1) + upperEquatoria;
+                ForestedEquatoria fe = new ForestedEquatoria(new Vector2d(x, y));
+                map.placeForestedEquatoria(fe);
+
+            }
+            else {
+                int x = rand.nextInt(this.WIDTH_OF_MAP);
+                int y = rand.nextInt((lowerEqatoria) + 1);
+                ForestedEquatoria fe = new ForestedEquatoria(new Vector2d(x, y));
+                map.placeForestedEquatoria(fe);
+            }
+        }
+
+
+    }
+    public void toxicCorpsesGrowth() {
+        int nonToxicPlaces = (int) (0.8 * this.STARTING_NUMBER_OF_PLANTS); // preferred place to grow
+        int toxicPlaces = this.STARTING_NUMBER_OF_PLANTS - nonToxicPlaces;
+
+        ArrayList<Animal> tombsCopy = this.map.getTombs();
+        
+
+
+    }
+
+
     public void addNewGenotype(Genotype genotype) {
         this.listOfGenotypes.add(genotype);
     }
@@ -101,9 +173,6 @@ public class Simulation implements Runnable {
                         this.numberOfAnimals+=1;
                     }
                 }
-
-
-
             }
         }
     }

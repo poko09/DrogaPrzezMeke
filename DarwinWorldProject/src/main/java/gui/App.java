@@ -61,7 +61,7 @@ public class App extends Application implements IAppObserver {
     }
     public void stopButtonLogic(Thread thread) {
         if (this.isSuspended) {
-            thread.resume();
+            thread.resume(); // toDo Java dipriciated -- thread/resume/ suspend how to
             this.isSuspended =false;
         }
         else {

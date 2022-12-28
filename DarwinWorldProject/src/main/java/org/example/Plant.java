@@ -2,13 +2,14 @@ package org.example;
 
 import java.util.Objects;
 
-public abstract class Plant {
+public abstract class Plant implements IElement{
 
     protected Vector2d position;
 
     public Plant(Vector2d position){
 
         this.position = position;
+
     }
 
     public Vector2d getPosition() {

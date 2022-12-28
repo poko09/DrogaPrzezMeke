@@ -96,6 +96,7 @@ public class InfernalPortal implements IPositionChangeObserver {
 
 
 
+
     public void placeAnimalOnTheMap(Animal animal, Simulation simulation) {
         if (animals.containsKey(animal.getPosition())) {
             animals.get(animal.getPosition()).add(animal);

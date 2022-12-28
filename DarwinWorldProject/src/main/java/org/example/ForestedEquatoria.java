@@ -7,4 +7,8 @@ public class ForestedEquatoria extends Plant{
         super(position);
     }
 
+    @Override
+    public String getNameOfPathElement() {
+        return "src/main/resources/toxicCorpses.png";
+    }
 }

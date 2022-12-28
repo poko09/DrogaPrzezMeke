@@ -26,6 +26,9 @@ public class Main {
                 -> System.out.println(key));
 
 
+        DataSet ds = new DataSet("parametry.txt");
+        InfernalPortal map = new InfernalPortal(ds);
+        System.out.println(map.getTombs());
 
 
 
@@ -34,10 +37,7 @@ public class Main {
 
 
 
-
-
-
-        //Application.launch(App.class, args);
+          //Application.launch(App.class, args);
 //        Genotype genotype = new Genotype();
 //        Genotype genotype2 = new Genotype();
 //        InfernalPortal map = new InfernalPortal(50,50);
