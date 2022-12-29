@@ -9,7 +9,7 @@ public class ToxicCorpses extends Plant {
 
     @Override
     public String toString() {
-        return "*";
+        return "X";
     }
 
     @Override

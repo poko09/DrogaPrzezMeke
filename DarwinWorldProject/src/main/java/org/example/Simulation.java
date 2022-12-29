@@ -1,9 +1,6 @@
 package org.example;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class Simulation implements Runnable {
 
@@ -90,7 +87,7 @@ public class Simulation implements Runnable {
         int height = this.map.getHeight();
 //        int width = data.getWidthOfMap();
 //        int height = data.getHeightOfMap();
-        int insideEquatoria = (int) (0.8 * numberOfPlants);
+        int insideEquatoria = (int) (0.8 * numberOfPlants); //preferred place to growth
         int outsideEquatoria = numberOfPlants - insideEquatoria;
 
         int upperEquatoria = (int) (0.6 * height);
@@ -124,21 +121,55 @@ public class Simulation implements Runnable {
                 map.placeForestedEquatoria(fe);
             }
         }
-
-
     }
-    
+
     public void toxicCorpsesGrowth(int numberOfPlant) {
+        int width = this.map.getWidth();
+        int height = this.map.getHeight();
+        Random rand = new Random();
 
         // toDO
         int nonToxicPlaces = (int) (0.8 * numberOfPlant); // preferred place to grow
         int toxicPlaces = numberOfPlant - nonToxicPlaces;
 
         ArrayList<Animal> tombsCopy = this.map.getTombs();
-        ToxicCorpses tx = new ToxicCorpses(new Vector2d(0,0));
-        map.placeToxicCorpsesOnTheMap(tx);
+        ArrayList<Vector2d> cementary = new ArrayList<>();
 
+        for(Animal a : tombsCopy) {
+            cementary.add(a.getPosition());
+        }
 
+        ArrayList<Vector2d> allPlacesOnMap = new ArrayList<>();
+
+        for(int i = 0; i<=height; i++){
+            for(int j = 0; j<=width;j++) {
+                allPlacesOnMap.add(new Vector2d(j,i));
+            }
+        }
+
+        cementary.sort(Comparator.comparing(Vector2d::getX));
+        cementary.sort(Comparator.comparing(Vector2d::getY));
+        allPlacesOnMap.removeAll(cementary);
+
+        for(int i = 0; i < nonToxicPlaces; i++) {
+            while(true) {
+                int x = rand.nextInt(width);
+                int y = rand.nextInt(height);
+                Vector2d vec = new Vector2d(x, y);
+                if(allPlacesOnMap.contains(vec)) {
+                    ToxicCorpses tx = new ToxicCorpses(vec);
+                    map.placeToxicCorpsesOnTheMap(tx);
+                    break;
+                }
+            }
+        }
+        for(int i = 0; i< toxicPlaces; i++) {
+            int x = rand.nextInt(width);
+            int y = rand.nextInt(height);
+            Vector2d vec = new Vector2d(x, y);
+            ToxicCorpses tx = new ToxicCorpses(vec);
+            map.placeToxicCorpsesOnTheMap(tx);
+        }
 
     }
 

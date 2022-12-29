@@ -1,8 +1,7 @@
 package org.example;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import gui.Menu;
+import javafx.application.Application;
 
 public class Main {
     public static void main(String[] args) {
@@ -13,9 +12,9 @@ public class Main {
 
 
 
+        Application.launch(Menu.class, args);
 
-
-
+        
 
 
 // symulacja
@@ -39,7 +38,7 @@ public class Main {
 //                -> System.out.println(key));
 //
 //
-//        DataSet ds = new DataSet("parametry.txt");
+
 //        InfernalPortal map = new InfernalPortal(ds);
 //
 //        InfernalPortal mapka = new InfernalPortal(ds);
@@ -50,45 +49,66 @@ public class Main {
 //        System.out.println(mapka);
 
 
+//        DataSet ds = new DataSet("parametry.txt");
+//        InfernalPortal mapka = new InfernalPortal(ds);
+//        Simulation engine = new Simulation(mapka, ds);
+//        System.out.println(mapka);
 
 
 
 
-//        toDO toksyczne trupy
-        int height = 10;
-        int width = 10;
-        Vector2d v1 = new Vector2d(0,0);
-        ArrayList<Vector2d> cementary = new ArrayList<>();
-        cementary.add(new Vector2d(0,0));
-        cementary.add(new Vector2d(2,2));
-        cementary.add(new Vector2d(2,2));
-        cementary.add(new Vector2d(1,1));
 
-        Map<Vector2d, ArrayList<Vector2d>> listOfDeadbodies = new HashMap<>();
 
-        for(int i = 0; i<=height; i++){
-            for(int j = 0; j<=width;j++) {
-                listOfDeadbodies.put(new Vector2d(j,i), new ArrayList<Vector2d>());
-            }
-        }
-        System.out.println(v1);
-        ArrayList<Vector2d> deadAnimals = new ArrayList<>();
-
-        for(Vector2d positionOfDead : cementary) {
-            if(listOfDeadbodies.containsKey(positionOfDead)) {
-                deadAnimals.add(positionOfDead);
-
-            }
-
-        }
-        deadAnimals.forEach(
-                (element)
-                -> System.out.println(element));
+////        toDO toksyczne trupy
+//        int height = 10;
+//        int width = 10;
+//        Vector2d v1 = new Vector2d(0,0);
+//        ArrayList<Vector2d> cementary = new ArrayList<>();
+//        cementary.add(new Vector2d(0,0));
+//        cementary.add(new Vector2d(2,2));
+//        cementary.add(new Vector2d(2,2));
+//        cementary.add(new Vector2d(1,1));
+//        cementary.add(new Vector2d(0,0));
+//
+//        Map<Vector2d, ArrayList<Vector2d>> listOfDeadbodies = new HashMap<>();
+//
+//        for(int i = 0; i<=height; i++){
+//            for(int j = 0; j<=width;j++) {
+//                listOfDeadbodies.put(new Vector2d(j,i), new ArrayList<Vector2d>());
+//            }
+//        }
+//        System.out.println(v1);
+//        ArrayList<Vector2d> deadAnimals = new ArrayList<>();
+//
+//        for(Vector2d positionOfDead : cementary) {
+//            if(listOfDeadbodies.containsKey(positionOfDead)) {
+//                deadAnimals.add(positionOfDead);
+//
+//            }
+//
+//        }
+//        deadAnimals.forEach(
+//                (element)
+//                -> System.out.println(element));
 
 //        listOfDeadbodies.forEach(
 //                (key, value)
 //                        -> System.out.println(key));
 
+//       Comparator<Vector2d> bigger = (o1, o2) -> o1.getX().compareTo(o2.getX());
+
+//        deadAnimals.sort(Comparator.comparing(Vector2d::getX));
+//        deadAnimals.sort(Comparator.comparing(Vector2d::getY));
+//        deadAnimals.forEach(
+//                (element)
+//                        -> System.out.println(element));
+//
+//        int x = 8;
+//        int y = 2;
+//        if(deadAnimals.size() >= y) {
+//            System.out.println("no siemka, tu se wyrosne");
+//        }
+//        ArrayList<Vector2d> dupa = new ArrayList();
 
 
 
