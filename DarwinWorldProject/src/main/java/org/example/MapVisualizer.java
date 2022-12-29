@@ -86,6 +86,9 @@ public class MapVisualizer {
         } else {
             result = EMPTY_CELL;
         }
+        if (this.map.isOccupiedByGrass(currentPosition)){
+            result = this.map.grassAt(currentPosition).toString();
+        }
         return result;
     }
 }

@@ -7,6 +7,10 @@ public class ToxicCorpses extends Plant {
         super(position);
     }
 
+    @Override
+    public String toString() {
+        return "*";
+    }
 
     @Override
     public String getNameOfPathElement() {
