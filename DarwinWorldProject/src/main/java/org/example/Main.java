@@ -1,19 +1,11 @@
 package org.example;
 
-import gui.App;
-import javafx.application.Application;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Main {
     public static void main(String[] args) {
-
-
-
-
-
 
 
 
@@ -67,6 +59,7 @@ public class Main {
         int width = 10;
         Vector2d v1 = new Vector2d(0,0);
         ArrayList<Vector2d> cementary = new ArrayList<>();
+        cementary.add(new Vector2d(0,0));
         cementary.add(new Vector2d(2,2));
         cementary.add(new Vector2d(2,2));
         cementary.add(new Vector2d(1,1));
@@ -75,19 +68,26 @@ public class Main {
 
         for(int i = 0; i<=height; i++){
             for(int j = 0; j<=width;j++) {
-                listOfDeadbodies.put(new Vector2d(j,i), new ArrayList<>());
+                listOfDeadbodies.put(new Vector2d(j,i), new ArrayList<Vector2d>());
             }
         }
         System.out.println(v1);
-        for(Vector2d positionOfDead : cementary) {
+        ArrayList<Vector2d> deadAnimals = new ArrayList<>();
 
+        for(Vector2d positionOfDead : cementary) {
+            if(listOfDeadbodies.containsKey(positionOfDead)) {
+                deadAnimals.add(positionOfDead);
+
+            }
 
         }
+        deadAnimals.forEach(
+                (element)
+                -> System.out.println(element));
 
-
-        listOfDeadbodies.forEach(
-                (key, value)
-                        -> System.out.println(value));
+//        listOfDeadbodies.forEach(
+//                (key, value)
+//                        -> System.out.println(key));
 
 
 
