@@ -13,7 +13,7 @@ public class Simulation implements Runnable {
     public final int PLANT_SELECTION;
     private InfernalPortal map;
     private int numberOfAnimals;
-
+    private int numberOfPlants;
     // ToDo: uzupelnic logike do tego
     private int numberOfFreeFields;
     private ArrayList<Genotype> listOfGenotypes;
@@ -36,6 +36,7 @@ public class Simulation implements Runnable {
         this.createAndPlaceAnimalsOnTheMap();
         this.growthOfNewPlants();
         this.numberOfAnimals = STARTING_NUMBER_OF_ANIMALS;
+        this.numberOfPlants = STARTING_NUMBER_OF_PLANTS;
         this.appObserverList = new ArrayList<>();
         this.dayOfSimulation=0;
         this.HEIGHT_OF_MAP = data.getHeightOfMap();
@@ -72,9 +73,6 @@ public class Simulation implements Runnable {
                 }
             }
 
-
-        }
-    }
 
 
     public void growthOfNewPlants() {
@@ -124,19 +122,19 @@ public class Simulation implements Runnable {
 
 
     }
-    
+
     public void toxicCorpsesGrowth(int numberOfPlant) {
         int nonToxicPlaces = (int) (0.8 * numberOfPlant); // preferred place to grow
         int toxicPlaces = numberOfPlant - nonToxicPlaces;
 
         ArrayList<Animal> tombsCopy = this.map.getTombs();
-        
+
 
 
     }
 
 
-    public void addNewGenotype(Genotype genotype) {
+    public void addNewGenotype (Genotype genotype) {
         this.listOfGenotypes.add(genotype);
     }
     public void calculateAverageEnergy() {
@@ -186,6 +184,9 @@ public class Simulation implements Runnable {
                         this.numberOfAnimals+=1;
                     }
                 }
+
+
+
             }
         }
     }
@@ -209,26 +210,20 @@ public class Simulation implements Runnable {
         this.moveAllAnimals();
         this.animalsEatPlants();
         this.reproductionOfAnimal();
-        // tu ma byc funkcja rosliny rosna kazdego nia
+        this.growthOfNewPlants();
         this.animalsGetsOlder();
 
     }
-    /// sprawdzic czy dziala to co skompilowalam
+
     public void run() {
-//        System.out.println( this.map);
-//        this.map.listAllAnimals();
-//        System.out.println(this.numberOfAnimals);
+
         while(true) {
-//            System.out.println("NEW DAY number: " + i);
             this.simulationOfOneDay();
-//            System.out.println( this.map);
-//            this.map.listAllAnimals();
-//            System.out.println(this.numberOfAnimals);
             this.informObservers();
+
             try {
                 Thread.sleep(this.moveDelay);
             } catch (InterruptedException e) {
-                continue;
             }
 
         }

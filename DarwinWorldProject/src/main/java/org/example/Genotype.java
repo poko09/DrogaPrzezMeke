@@ -2,6 +2,7 @@ package org.example;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Random;
 
 public class Genotype {
@@ -48,7 +49,6 @@ public class Genotype {
         // ToDo: Podzielic na funkcje
         //jesli 0 to lewa czesc genotypu zostanie wzieta z osobnika silenijeszego
         if (leftOrRight==0) {
-            System.out.println( "left from stronger");
             for (int i = 0; i < numOfGensFromStrongerParent; i++) {
                 //animal moze miec metode genrate i zeby nie bylo tych funkcji
                 newGenomtype[i] = new Gen(strongerParent.getGenotype().getRotationFromSpecificGen(i));
@@ -100,6 +100,21 @@ public class Genotype {
 
         }
 
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Genotype genotype = (Genotype) o;
+        return length_of_genotype == genotype.length_of_genotype && Arrays.equals(arrayOfGens, genotype.arrayOfGens);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(length_of_genotype);
+        result = 31 * result + Arrays.hashCode(arrayOfGens);
+        return result;
     }
 
     @Override

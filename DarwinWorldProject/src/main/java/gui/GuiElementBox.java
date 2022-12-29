@@ -19,8 +19,14 @@ public class GuiElementBox {
     }
 
 
-    public GuiElementBox(IElement element) throws FileNotFoundException {
-        Image image = new Image (new FileInputStream(element.getNameOfPathElement()));
+    public GuiElementBox(IElement element, boolean strongGenotype) throws FileNotFoundException {
+        Image image;
+        if (strongGenotype) {
+            image = new Image (new FileInputStream("src/main/resources/strong.png"));
+        } else {
+            image = new Image (new FileInputStream(element.getNameOfPathElement()));
+        }
+
         ImageView imageView = new ImageView(image);
         imageView.setFitWidth(ELEMENT_SIZE);
         imageView.setFitHeight(ELEMENT_SIZE);
