@@ -22,8 +22,7 @@ public class Simulation implements Runnable {
     private List<IAppObserver> appObserverList;
     private DataSet data;
     private int dayOfSimulation;
-    private final int HEIGHT_OF_MAP;
-    private final int WIDTH_OF_MAP;
+
 
     public Simulation(InfernalPortal map, DataSet data) {
         this.STARTING_NUMBER_OF_ANIMALS = data.getNumberOfAnimals();
@@ -39,8 +38,7 @@ public class Simulation implements Runnable {
         this.numberOfPlants = STARTING_NUMBER_OF_PLANTS;
         this.appObserverList = new ArrayList<>();
         this.dayOfSimulation=0;
-        this.HEIGHT_OF_MAP = data.getHeightOfMap();
-        this.WIDTH_OF_MAP = data.getWidthOfMap();
+
 
 
     }
@@ -88,8 +86,10 @@ public class Simulation implements Runnable {
     }
     public void forestedEquatoriaGrowth(int numberOfPlants) {
 
-        int width = data.getWidthOfMap();
-        int height = data.getHeightOfMap();
+        int width = this.map.getWidth();
+        int height = this.map.getHeight();
+//        int width = data.getWidthOfMap();
+//        int height = data.getHeightOfMap();
         int insideEquatoria = (int) (0.8 * numberOfPlants);
         int outsideEquatoria = numberOfPlants - insideEquatoria;
 

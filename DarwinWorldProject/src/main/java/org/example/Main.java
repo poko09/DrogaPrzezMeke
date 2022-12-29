@@ -1,7 +1,7 @@
 package org.example;
 
-import java.util.HashMap;
-import java.util.Map;
+import gui.App;
+import javafx.application.Application;
 
 public class Main {
     public static void main(String[] args) {
@@ -58,83 +58,6 @@ public class Main {
 
 
 
-        //toDO toksyczne trupy
-//        int height = 10;
-//        int width = 10;
-//        Vector2d v1 = new Vector2d(0,0);
-//        ArrayList<Vector2d> cementary = new ArrayList<>();
-//        cementary.add(new Vector2d(2,2));
-//        cementary.add(new Vector2d(2,2));
-//        cementary.add(new Vector2d(1,1));
-//
-//        Map<Vector2d, ArrayList<Vector2d>> listOfDeadbodies = new HashMap<>();
-//
-//        for(int i = 0; i<=height; i++){
-//            for(int j = 0; j<=width;j++) {
-//                listOfDeadbodies.put(new Vector2d(j,i), new ArrayList<>());
-//            }
-//        }
-//        System.out.println(v1);
-//        for(Vector2d positionOfDead in cementary) {
-//
-//        }
-//
-//
-//        listOfDeadbodies.forEach(
-//                (key, value)
-//                        -> System.out.println(value));
-//
-
-
-
-
-
-
-
-//        Forested Equatoria - test
-//        System.out.println("==========='='='='='='='='");
-//
-//        int numberOfPlants = 20;
-////
-//        int insideEquatoria = (int) (0.8 * numberOfPlants);
-//        int outsideEquatoria = numberOfPlants - insideEquatoria;
-//
-//        int upperEquatoria = (int) (0.6 * 10);
-//        int lowerEqatoria = (int)(0.4 * 10);
-//
-//        Random rand = new Random();
-//
-//        //        toDo zdekomponuj to byczku!
-//
-//        for(int i = 0; i < insideEquatoria; i++) {
-//
-//            int x = rand.nextInt(10);
-//            int y = rand.nextInt((upperEquatoria - lowerEqatoria) + 1) + lowerEqatoria;
-//            ForestedEquatoria fe = new ForestedEquatoria(new Vector2d(x, y));
-////            map.placeForestedEquatoria(fe);
-//            System.out.println(fe.getPosition());
-//
-//
-//        }
-//        System.out.println("==");
-//
-//        for(int i = 0; i < outsideEquatoria; i++) {
-//            if(i%2==0) {
-//                int x = rand.nextInt(10);
-//                int y = rand.nextInt((10 - upperEquatoria)+1) + upperEquatoria;
-//                ForestedEquatoria fe = new ForestedEquatoria(new Vector2d(x, y));
-////                map.placeForestedEquatoria(fe);
-//                System.out.println(fe.getPosition());
-//
-//            }
-//            else {
-//                int x = rand.nextInt(10);
-//                int y = rand.nextInt((lowerEqatoria) + 1);
-//                ForestedEquatoria fe = new ForestedEquatoria(new Vector2d(x, y));
-////                map.placeForestedEquatoria(fe);
-//                System.out.println(fe.getPosition());
-//            }
-//        }
 
 
 
@@ -147,7 +70,8 @@ public class Main {
 
 
 
-          //Application.launch(App.class, args);
+
+          Application.launch(App.class, args);
 //        Genotype genotype = new Genotype();
 //        Genotype genotype2 = new Genotype();
 //        InfernalPortal map = new InfernalPortal(50,50);
