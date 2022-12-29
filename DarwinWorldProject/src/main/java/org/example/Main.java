@@ -1,22 +1,11 @@
 package org.example;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 public class Main {
     public static void main(String[] args) {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 // symulacja
@@ -55,32 +44,33 @@ public class Main {
 
 
 
-        //toDO toksyczne trupy
-//        int height = 10;
-//        int width = 10;
-//        Vector2d v1 = new Vector2d(0,0);
-//        ArrayList<Vector2d> cementary = new ArrayList<>();
-//        cementary.add(new Vector2d(2,2));
-//        cementary.add(new Vector2d(2,2));
-//        cementary.add(new Vector2d(1,1));
-//
-//        Map<Vector2d, ArrayList<Vector2d>> listOfDeadbodies = new HashMap<>();
-//
-//        for(int i = 0; i<=height; i++){
-//            for(int j = 0; j<=width;j++) {
-//                listOfDeadbodies.put(new Vector2d(j,i), new ArrayList<>());
-//            }
-//        }
-//        System.out.println(v1);
-//        for(Vector2d positionOfDead in cementary) {
-//
-//        }
-//
-//
-//        listOfDeadbodies.forEach(
-//                (key, value)
-//                        -> System.out.println(value));
-//
+//        toDO toksyczne trupy
+        int height = 10;
+        int width = 10;
+        Vector2d v1 = new Vector2d(0,0);
+        ArrayList<Vector2d> cementary = new ArrayList<>();
+        cementary.add(new Vector2d(2,2));
+        cementary.add(new Vector2d(2,2));
+        cementary.add(new Vector2d(1,1));
+
+        Map<Vector2d, ArrayList<Vector2d>> listOfDeadbodies = new HashMap<>();
+
+        for(int i = 0; i<=height; i++){
+            for(int j = 0; j<=width;j++) {
+                listOfDeadbodies.put(new Vector2d(j,i), new ArrayList<>());
+            }
+        }
+        System.out.println(v1);
+        for(Vector2d positionOfDead : cementary) {
+
+
+        }
+
+
+        listOfDeadbodies.forEach(
+                (key, value)
+                        -> System.out.println(value));
+
 
 
 
