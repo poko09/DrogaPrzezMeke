@@ -1,34 +1,31 @@
 package org.example;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class Main {
     public static void main(String[] args) {
 
-        ToxicCorpses toxic = new ToxicCorpses(new Vector2d(4,5));
-        ToxicCorpses toxic1 = new ToxicCorpses(new Vector2d(6,5));
-        ToxicCorpses toxic2 = new ToxicCorpses(new Vector2d(7,8));
-
-        System.out.println(toxic.getPosition());
-        ForestedEquatoria equatoria = new ForestedEquatoria(new Vector2d(3,3));
-        System.out.println(equatoria.isAt(new Vector2d(3,4)));
-
-        Map<Vector2d, Plant> plants = new HashMap<>();
-        //asdasdpoaskdpokaspdok
-        plants.put(toxic.getPosition(), toxic);
-        plants.put(toxic1.getPosition(), toxic1);
-        plants.put(toxic2.getPosition(), toxic2);
-        System.out.println("=============");
-
-        plants.forEach(
-                (key, value)
-                -> System.out.println(key));
-
-
-        DataSet ds = new DataSet("parametry.txt");
-        InfernalPortal map = new InfernalPortal(ds);
-        System.out.println(map.getTombs());
+//        ToxicCorpses toxic = new ToxicCorpses(new Vector2d(4,5));
+//        ToxicCorpses toxic1 = new ToxicCorpses(new Vector2d(6,5));
+//        ToxicCorpses toxic2 = new ToxicCorpses(new Vector2d(7,8));
+//
+//        System.out.println(toxic.getPosition());
+//        ForestedEquatoria equatoria = new ForestedEquatoria(new Vector2d(3,3));
+//        System.out.println(equatoria.isAt(new Vector2d(3,4)));
+//
+//        Map<Vector2d, Plant> plants = new HashMap<>();
+//        //asdasdpoaskdpokaspdok
+//        plants.put(toxic.getPosition(), toxic);
+//        plants.put(toxic1.getPosition(), toxic1);
+//        plants.put(toxic2.getPosition(), toxic2);
+//        System.out.println("=============");
+//
+//        plants.forEach(
+//                (key, value)
+//                -> System.out.println(key));
+//
+//
+//        DataSet ds = new DataSet("parametry.txt");
+//        InfernalPortal map = new InfernalPortal(ds);
+//        System.out.println(map.getTombs());
 
 
 
