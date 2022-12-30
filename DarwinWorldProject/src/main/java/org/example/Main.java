@@ -7,14 +7,19 @@ public class Main {
     public static void main(String[] args) {
 
 
+        try {
+            Application.launch(Menu.class, args);
+        }
+        catch (IllegalArgumentException ex) {
+            System.exit(0);
+
+        }
 
 
 
 
 
-        Application.launch(Menu.class, args);
 
-        
 
 
 // symulacja

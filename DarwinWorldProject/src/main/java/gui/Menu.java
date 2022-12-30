@@ -1,10 +1,11 @@
 package gui;
 
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -21,26 +22,35 @@ public class Menu extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
+
         Text text = new Text();
         text.setText("Welcome to Darwin World Simulation!");
+        StackPane root = new StackPane();
+        Button leftBox = new Button("Start Simulation" );
+        VBox vbox = new VBox(leftBox);
+        root.getChildren().addAll(text, vbox);
+
+        final Scene scene = new Scene(root,400, 400, Color.DARKSEAGREEN);
+        scene.setFill(Color.DARKSEAGREEN);
         text.setTextAlignment(TextAlignment.CENTER);
         text.setFont(Font.font("Arial", FontWeight.BOLD, 20));
-        StackPane root = new StackPane();
 
-        HBox leftBox = new HBox(new Button("Start Simulation" ));
+
+//        leftBox.setLayoutX(200);
+        vbox.setAlignment(Pos.BASELINE_LEFT);
+
+
 //        leftBox.setAlignment(Pos.CENTER_LEFT);
 //        HBox.setHgrow(leftBox, Priority.ALWAYS);
 //        root.setBottom(leftBox);
 
-
-
-        root.getChildren().addAll(text, leftBox);
-        Scene scene = new Scene(root,400, 400, Color.DARKSEAGREEN);
-
         primaryStage.setTitle("DarwinWorldSimulation");
-        scene.setFill(Color.DARKSEAGREEN);
+
+        setButtonFunctions(leftBox);
+
         primaryStage.setScene(scene);
         primaryStage.show();
+
 //
 //        // set title for the stage
 //        stage.setTitle("Darwin World Simulation");
@@ -71,12 +81,29 @@ public class Menu extends Application {
 //        stage.setScene(scene);
 //
 //        stage.show();
+    }
 
-
+    private void setButtonFunctions(Button start) {
+        start.setOnAction( event -> {
+           runApplication();
+        });
 
 
 
     }
+
+    public void runApplication() {
+        App application = new App();
+        application.init();
+        try {
+            application.start(new Stage());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+
 
 
 
