@@ -58,12 +58,14 @@ public class Simulation implements Runnable {
         for (ArrayList<Animal> listOfAnimals : animalsCopy.values()) {
             if (this.map.getPlants().containsKey(listOfAnimals.get(0))) {
                 if (listOfAnimals.size() > 1) {
+                    System.out.println("eat");
                     Animal eater = this.map.solveDrawWithEatingOrReproducing(listOfAnimals);
                     eater.eat();
                     map.getPlants().remove(eater.getPosition());
                 }
                 else {
                     listOfAnimals.get(0).eat();
+                    System.out.println("eat");
                     map.getPlants().remove(listOfAnimals.get(0).getPosition());
                 }
             }
