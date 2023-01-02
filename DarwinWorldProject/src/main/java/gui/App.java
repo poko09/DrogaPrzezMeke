@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import org.example.*;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class App extends Application implements IAppObserver{
 
@@ -34,6 +35,7 @@ public class App extends Application implements IAppObserver{
     private final int RGBSIZE = 255;
 
 
+    WriteToCSV csvFile = new WriteToCSV("Map Statistics" );
     public void init() {
         this.data = new DataSet("parametry.txt");
         this.map = new InfernalPortal(this.data);
@@ -52,12 +54,13 @@ public class App extends Application implements IAppObserver{
         Button resumeButton = new Button("Resume Simulation");
         Button stopTrackingButton = new Button("Stop tracking");
         Button genotypeButton = new Button("Most popular genotype");
+        Button saveDataButton = new Button("Save Data");
 
         allButtonshbBox.setSpacing(10.0);
         allButtonshbBox.setAlignment(Pos.BOTTOM_CENTER);
-        allButtonshbBox.getChildren().addAll(stopButton,resumeButton, stopTrackingButton, genotypeButton);
+        allButtonshbBox.getChildren().addAll(stopButton,resumeButton, stopTrackingButton, genotypeButton, saveDataButton);
 
-        this.setButtonFunctions(stopButton,resumeButton, stopTrackingButton, genotypeButton);
+        this.setButtonFunctions(stopButton,resumeButton, stopTrackingButton, genotypeButton, saveDataButton);
 
         this.mainVBox.getChildren().addAll(allButtonshbBox, this.gridPane, this.trackedAnimalLabel);
         this.drawGridPane(false);
@@ -68,7 +71,7 @@ public class App extends Application implements IAppObserver{
 
     }
 
-    public void setButtonFunctions(Button stopButton, Button resumeButton, Button stopTrackingButton, Button genotypeButton) {
+    public void setButtonFunctions(Button stopButton, Button resumeButton, Button stopTrackingButton, Button genotypeButton, Button saveDataButton) {
         stopButton.setOnAction(event -> {
             this.stopButtonLogic();
         });
@@ -84,6 +87,9 @@ public class App extends Application implements IAppObserver{
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             }
+        });
+        saveDataButton.setOnAction(event -> {
+            this.saveDataLogic();
         });
     }
 
@@ -115,6 +121,19 @@ public class App extends Application implements IAppObserver{
             this.trackedAnimalLabel.setText("");
             this.trackedAnimal=null;
         }
+    }
+    public void saveDataLogic() {
+        this.updateFile();
+    }
+    public void updateFile() {
+
+        try {
+            csvFile.writeToFile("To jest probny zapis");
+        }
+        catch (IOException ex) {
+            System.out.println("close the file");
+        }
+
     }
 
 

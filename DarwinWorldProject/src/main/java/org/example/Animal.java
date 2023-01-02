@@ -65,6 +65,7 @@ public class Animal implements IElement {
     public void eat() {
         this.energy+=energyGainedFromPlant;
         this.numberOfEatedPlants+=1;
+
     }
 
     public void reduceEnergy(int usedEnergy) {
@@ -75,10 +76,10 @@ public class Animal implements IElement {
     public String toString() {
         String textAnimal = "Animal: " +
                 " active gen=" + orientation +
-                ", energy=" + energy +
+                ", energy =" + energy +
                 ", genotype=" + genotype +
                 ", age=" + age +
-                ", numOfChildren=" + numOfChildren;
+                ", number of kids = " + numOfChildren;
         if (this.isAlive) {
             return textAnimal;
         } else {

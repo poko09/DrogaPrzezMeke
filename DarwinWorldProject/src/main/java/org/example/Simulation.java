@@ -30,7 +30,7 @@ public class Simulation implements Runnable {
         this.map = map;
         this.listOfGenotypes = new ArrayList<>();
         this.createAndPlaceAnimalsOnTheMap();
-        this.growthOfNewPlants();
+        this.growthOfNewPlants(this.STARTING_NUMBER_OF_PLANTS);
         this.numberOfAnimals = STARTING_NUMBER_OF_ANIMALS;
         this.numberOfPlants = STARTING_NUMBER_OF_PLANTS;
         this.appObserverList = new ArrayList<>();
@@ -54,13 +54,16 @@ public class Simulation implements Runnable {
      */
     public void animalsEatPlants() { //  będzie bardzo podobne do reprodukcji
 
-        HashMap<Vector2d, ArrayList<Animal>> animalsCopy = new HashMap<Vector2d, ArrayList<Animal>>(this.map.animals);
+        Map<Vector2d, ArrayList<Animal>> animalsCopy = this.map.getAnimals();
+        //HashMap<Vector2d, ArrayList<Animal>> animalsCopy = new HashMap<Vector2d, ArrayList<Animal>>(this.map.animals);
         for (ArrayList<Animal> listOfAnimals : animalsCopy.values()) {
-            if (this.map.getPlants().containsKey(listOfAnimals.get(0))) {
+            if (this.map.getPlants().containsKey(listOfAnimals.get(0).getPosition())) {
                 if (listOfAnimals.size() > 1) {
                     System.out.println("eat");
                     Animal eater = this.map.solveDrawWithEatingOrReproducing(listOfAnimals);
+                    //System.out.println("Zwierze cos je");
                     eater.eat();
+//                    eater.
                     map.getPlants().remove(eater.getPosition());
                 }
                 else {
@@ -75,11 +78,11 @@ public class Simulation implements Runnable {
     }
 
 
-    public void growthOfNewPlants() {
+    public void growthOfNewPlants(int numberOfPlants) {
 
         switch (this.PLANT_SELECTION) {
-            case 1 -> forestedEquatoriaGrowth(this.STARTING_NUMBER_OF_PLANTS);
-            case 2 -> toxicCorpsesGrowth(this.STARTING_NUMBER_OF_PLANTS);
+            case 1 -> forestedEquatoriaGrowth(numberOfPlants);
+            case 2 -> toxicCorpsesGrowth(numberOfPlants);
             default -> System.out.println("Podano nieprawidlowa wartosc rosliny");
         }
     }
@@ -247,13 +250,15 @@ public class Simulation implements Runnable {
 
     public void simulationOfOneDay() {
         this.dayOfSimulation+=1;
+        System.out.println(this.dayOfSimulation);
         // te funkcje moze jednak lepiej wrzucic do symulacji
         this.map.deleteDeadAnimalsFromTheMap(this);
         this.moveAllAnimals();
         this.animalsEatPlants();
         this.reproductionOfAnimal();
-        this.growthOfNewPlants();
+        if(this.dayOfSimulation >1){this.growthOfNewPlants(this.data.getDailyGrowthOfPlants());}
         this.animalsGetsOlder();
+        System.out.println(this.map);
 
     }
 
