@@ -238,7 +238,8 @@ public class InfernalPortal implements IPositionChangeObserver {
 
     public String toString() {
         MapVisualizer mapVisualizer = new MapVisualizer(this);
-        return mapVisualizer.draw(new Vector2d(0,0),new Vector2d(this.width, this.height));
+//        return mapVisualizer.draw(new Vector2d(0,0),new Vector2d(this.width, this.height));
+        return " ";
     }
 
 }
