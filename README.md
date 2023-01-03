@@ -35,6 +35,6 @@ Projekt - generator ewolucyjny, zawierający symulację świata Darwinowskiego
 - mutationSelection
 - lengthOfGenotype
 
-
+<br> </br>
 
 Dodatkowo w projekcie została dodana autorska muzyczka, która umila czas podczas podziwiana świata wirtualnych zwierzątek i roślinek :)
