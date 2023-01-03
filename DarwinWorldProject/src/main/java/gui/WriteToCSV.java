@@ -11,6 +11,16 @@ public class WriteToCSV {
     String fileName;
     File newFile;
 
+    private int numOfLivingAnimals = 0;
+    private int numOfPlants = 0;
+    private int numOfEmptyFields = 0;
+    private int famousGenotype = 0;
+    private double averageEnergy = 0;
+
+    private double[] array = {numOfLivingAnimals, numOfPlants, numOfEmptyFields, famousGenotype, averageEnergy};
+
+
+
 
     public WriteToCSV(String name) {
         this.fileName=name;
@@ -35,8 +45,12 @@ public class WriteToCSV {
 
         FileWriter writer = new FileWriter(newFile,true);
         writer.write("\n");
-        writer.write(convertToCSV(new String[]{data}));
-
+        String[] allValues = {String.valueOf(array[0]),
+                String.valueOf(array[1]),
+                String.valueOf(array[2]),
+                String.valueOf(array[3]),
+                String.valueOf(array[4])};
+        writer.write(convertToCSV(allValues));
 
         writer.close();
     }

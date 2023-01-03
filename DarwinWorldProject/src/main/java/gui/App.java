@@ -16,6 +16,7 @@ import org.example.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+
 public class App extends Application implements IAppObserver{
 
     private InfernalPortal map;
@@ -47,6 +48,11 @@ public class App extends Application implements IAppObserver{
         this.simulationThread = new Thread(simulation);
         simulationThread.start();
     }
+
+
+
+
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         HBox allButtonshbBox = new HBox();
@@ -55,12 +61,13 @@ public class App extends Application implements IAppObserver{
         Button stopTrackingButton = new Button("Stop tracking");
         Button genotypeButton = new Button("Most popular genotype");
         Button saveDataButton = new Button("Save Data");
+        Button startNewSimulation = new Button("Start New");
 
         allButtonshbBox.setSpacing(10.0);
         allButtonshbBox.setAlignment(Pos.BOTTOM_CENTER);
-        allButtonshbBox.getChildren().addAll(stopButton,resumeButton, stopTrackingButton, genotypeButton, saveDataButton);
+        allButtonshbBox.getChildren().addAll(stopButton,resumeButton, stopTrackingButton, genotypeButton, saveDataButton, startNewSimulation);
 
-        this.setButtonFunctions(stopButton,resumeButton, stopTrackingButton, genotypeButton, saveDataButton);
+        this.setButtonFunctions(stopButton,resumeButton, stopTrackingButton, genotypeButton, saveDataButton, startNewSimulation);
 
         this.mainVBox.getChildren().addAll(allButtonshbBox, this.gridPane, this.trackedAnimalLabel);
         this.drawGridPane(false);
@@ -71,7 +78,7 @@ public class App extends Application implements IAppObserver{
 
     }
 
-    public void setButtonFunctions(Button stopButton, Button resumeButton, Button stopTrackingButton, Button genotypeButton, Button saveDataButton) {
+    public void setButtonFunctions(Button stopButton, Button resumeButton, Button stopTrackingButton, Button genotypeButton, Button saveDataButton, Button startNewSimulationButton) {
         stopButton.setOnAction(event -> {
             this.stopButtonLogic();
         });
@@ -91,6 +98,10 @@ public class App extends Application implements IAppObserver{
         saveDataButton.setOnAction(event -> {
             this.saveDataLogic();
         });
+        startNewSimulationButton.setOnAction(event -> {
+            this.startNewSImulationLogic();
+        });
+
     }
 
     public void genotypeButtonLogic() throws FileNotFoundException {
@@ -122,6 +133,7 @@ public class App extends Application implements IAppObserver{
             this.trackedAnimal=null;
         }
     }
+
     public void saveDataLogic() {
         this.updateFile();
     }
@@ -134,6 +146,16 @@ public class App extends Application implements IAppObserver{
             System.out.println("close the file");
         }
 
+    }
+    public void startNewSImulationLogic(){
+//        Thread lp = new Thread(new LineProcessor());
+        LineProcessor lp = new LineProcessor();
+
+        try {
+            lp.start(new Stage());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 

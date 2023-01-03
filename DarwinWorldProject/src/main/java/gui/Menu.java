@@ -13,6 +13,10 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
+import javax.sound.sampled.*;
+import java.io.File;
+import java.io.IOException;
+
 
 public class Menu extends Application {
 
@@ -24,6 +28,7 @@ public class Menu extends Application {
 
 
         Text text = new Text();
+        music();
         text.setText("Welcome to Darwin World Simulation!");
         StackPane root = new StackPane();
         Button leftBox = new Button("Start Simulation" );
@@ -89,7 +94,6 @@ public class Menu extends Application {
         });
 
 
-
     }
 
     public void runApplication() {
@@ -100,6 +104,16 @@ public class Menu extends Application {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
+    }
+
+    public void music() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+        String musicLocation = "src/main/resources/dancingAnimals.wav";
+        File musicPath = new File (musicLocation);
+        AudioInputStream audioInput = AudioSystem.getAudioInputStream(musicPath);
+        Clip clip = AudioSystem.getClip();
+        clip.open(audioInput);
+        clip.start();
 
     }
 

@@ -1,11 +1,11 @@
-heightOfMap: 4
-widthOfMap: 4
+heightOfMap: 20
+widthOfMap: 20
 mapSelection: 1
 numberOfPlants: 10
 energyFromPlant: 20
 dailyGrowthOfPlants: 0
 plantSelection: 1
-numberOfAnimals: 2
+numberOfAnimals: 15
 initialEnergyOfAnimals: 80
 energyRequiredToReproduce: 7
 energyUsedToMakeChild: 6
