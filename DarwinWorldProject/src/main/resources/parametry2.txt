@@ -3,7 +3,7 @@ widthOfMap: 25
 numberOfPlants: 80
 energyFromPlant: 8
 dailyGrowthOfPlants: 10
-plantSelection: 1
+plantSelection: 2
 numberOfAnimals: 40
 initialEnergyOfAnimals: 200
 energyRequiredToReproduce: 26

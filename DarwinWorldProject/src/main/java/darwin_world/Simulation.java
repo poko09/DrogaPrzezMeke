@@ -24,6 +24,7 @@ public class Simulation implements Runnable {
     WriteToCSV csvFile;
     private Counter counter;
 
+
     public Simulation(InfernalPortal map, DataSet data, Counter counter) throws IOException {
         this.STARTING_NUMBER_OF_ANIMALS = data.getNumberOfAnimals();
         this.STARTING_ENERGY_OF_ANIMAL = data.getInitialEnergyOfAnimals();
@@ -39,6 +40,7 @@ public class Simulation implements Runnable {
         this.appObserverList = new ArrayList<>();
         this.dayOfSimulation=0;
         this.counter = counter;
+
     }
 
 
@@ -205,48 +207,43 @@ public class Simulation implements Runnable {
     }
 
     public void toxicCorpsesGrowth(int numberOfPlant) {
-        int width = this.map.getWIDTH();
-        int height = this.map.getHEIGHT();
         Random rand = new Random();
+        int randomNum = rand.nextInt(5);
 
-        int nonToxicPlaces = (int) (0.8 * numberOfPlant); // preferred place to grow
-        int toxicPlaces = numberOfPlant - nonToxicPlaces;
-
-        ArrayList<Animal> tombsCopy = this.map.getTombs();
-        ArrayList<Vector2d> cementary = new ArrayList<>();
-
-        for(Animal a : tombsCopy) {
-            cementary.add(a.getPosition());
-        }
-
-        ArrayList<Vector2d> allPlacesOnMap = new ArrayList<>();
-        for(int i = 0; i<height; i++){
-            for(int j = 0; j<width;j++) {
-                allPlacesOnMap.add(new Vector2d(j,i));
+        HashMap<Vector2d, Integer> cementary = new HashMap<>();
+        for(int i = 0; i<map.getWIDTH(); i++){
+            for(int j = 0; j<map.getHEIGHT();j++) {
+                cementary.put(new Vector2d(i,j), 0);
             }
         }
+        for (Animal animal : this.map.getTombs()) {
+            cementary.put(animal.getPosition(), cementary.get(animal.getPosition()) + 1);
+        }
 
-        allPlacesOnMap.removeAll(cementary);
+        Object[] a = cementary.entrySet().toArray();
+        Arrays.sort(a, new Comparator() {
+            public int compare(Object o1, Object o2) {
+                return ((Map.Entry<Vector2d, Integer>) o1).getValue()
+                        .compareTo(((Map.Entry<Vector2d, Integer>) o2).getValue());
+            }
+        });
 
-        for(int i = 0; i < nonToxicPlaces; i++) {
-            while(true) {
-                int x = rand.nextInt(width);
-                int y = rand.nextInt(height);
-                Vector2d vec = new Vector2d(x, y);
-                if(allPlacesOnMap.contains(vec)) {
-                    ToxicCorpses tx = new ToxicCorpses(vec);
+
+        int cementaryCount = 0;
+        for (int i=0; i < numberOfPlant; i++) {
+            if(randomNum < 4) {
+                    ToxicCorpses tx = new ToxicCorpses( ((Map.Entry<Vector2d, Integer>) a[cementaryCount]).getKey());
                     map.placeToxicCorpsesOnTheMap(tx);
-                    break;
-                }
+                    cementaryCount++;
+
+        } else {
+                int height = rand.nextInt(map.getHEIGHT());
+                int width = rand.nextInt(map.getWIDTH());
+                ToxicCorpses tx = new ToxicCorpses( new Vector2d(width, height));
+                map.placeToxicCorpsesOnTheMap(tx);
             }
-        }
-        for(int i = 0; i< toxicPlaces; i++) {
-            int x = rand.nextInt(width);
-            int y = rand.nextInt(height);
-            Vector2d vec = new Vector2d(x, y);
-            ToxicCorpses tx = new ToxicCorpses(vec);
-            map.placeToxicCorpsesOnTheMap(tx);
-        }
+
+            }
 
     }
 
@@ -295,12 +292,18 @@ public class Simulation implements Runnable {
     public void simulationOfOneDay() {
         this.dayOfSimulation+=1;
         this.map.deleteDeadAnimalsFromTheMap(this);
-        this.moveAllAnimals();
-        this.animalsEatPlants();
-        this.reproductionOfAnimal();
-        if(this.dayOfSimulation >1){this.growthOfNewPlants(this.data.getDailyGrowthOfPlants());}
-        this.animalsGetsOlder();
-        this.updateFile();
+        if (map.getAnimals().size() >0) {
+            this.moveAllAnimals();
+            this.animalsEatPlants();
+            this.reproductionOfAnimal();
+            if(this.dayOfSimulation >1){this.growthOfNewPlants(this.data.getDailyGrowthOfPlants());}
+            this.animalsGetsOlder();
+            this.updateFile();
+        } else {
+            System.exit(0);
+        }
+
+
 
     }
 
@@ -311,8 +314,8 @@ public class Simulation implements Runnable {
 
             try {
                 Thread.sleep(this.moveDelay);
-            } catch (Exception e) {
-                break;
+            } catch (InterruptedException e) {
+                System.exit(0);
             }
 
         }

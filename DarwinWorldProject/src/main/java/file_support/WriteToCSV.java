@@ -13,7 +13,7 @@ public class WriteToCSV {
 
     public WriteToCSV(String name, int numOfSimulation) throws IOException {
         this.fileName=name;
-        String newFileName = fileName + numOfSimulation + ".csv";
+        String newFileName = "src/main/resources/" + fileName + numOfSimulation + ".csv";
         this.newFile = new File(newFileName);
         this.appendDataToAFile(nameOfColumns, false);
     }
