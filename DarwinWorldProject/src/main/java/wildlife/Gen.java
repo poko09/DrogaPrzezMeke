@@ -1,4 +1,4 @@
-package org.example;
+package wildlife;
 
 import java.util.Objects;
 import java.util.Random;
@@ -13,7 +13,6 @@ public class Gen {
         else {
             throw new IllegalArgumentException("Wrong value!");
         }
-
     }
 
     public Gen () {
@@ -46,13 +45,10 @@ public class Gen {
         int nextOrPrevious = new Random().nextInt(2);
         if (nextOrPrevious==0) {
             this.next();
-
         }
         else {
             this.previous();
         }
-
-
     }
 
     @Override

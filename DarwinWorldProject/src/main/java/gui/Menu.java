@@ -1,5 +1,6 @@
 package gui;
 
+import file_support.Counter;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -24,20 +25,18 @@ import java.io.IOException;
 public class Menu extends Application {
 
     private Counter counter=new Counter();
-    private TextField txtNameOfFilePath = new TextField("parametry.txt");
-
+    private TextField txtNameOfFilePath = new TextField("src/main/resources/parametry.txt");
 
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        //music();
+        music();
         VBox root = new VBox(50);
 
         Text welcomeText = new Text();
         welcomeText.setText("Welcome to Darwin World Simulation!");
         welcomeText.setTextAlignment(TextAlignment.CENTER);
         welcomeText.setFont(Font.font("Arial", FontWeight.BOLD, 20));
-        //welcomeText.setTextAlignment(30);
 
         Label labelStart = new Label("Press the button if you are ready to start simulation");
         labelStart.setFont(Font.font("Arial", 15));
@@ -59,6 +58,7 @@ public class Menu extends Application {
 
         final Scene scene = new Scene(root,450, 450, Color.DARKSEAGREEN);
         scene.setFill(Color.DARKSEAGREEN);
+
         primaryStage.setTitle("DarwinWorldSimulation");
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
@@ -70,8 +70,6 @@ public class Menu extends Application {
 
         primaryStage.setScene(scene);
         primaryStage.show();
-
-
     }
 
     private void setButtonFunctions(Button start) {
@@ -82,9 +80,15 @@ public class Menu extends Application {
                 throw new RuntimeException(e);
             }
         });
+    }
 
-
-
+    public void music() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+        String musicLocation = "src/main/resources/dancingAnimals.wav";
+        File musicPath = new File (musicLocation);
+        AudioInputStream audioInput = AudioSystem.getAudioInputStream(musicPath);
+        Clip clip = AudioSystem.getClip();
+        clip.open(audioInput);
+        clip.start();
     }
 
     public void runApplication() throws IOException {
@@ -98,23 +102,5 @@ public class Menu extends Application {
         }
 
     }
-
-    public void music() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
-        String musicLocation = "src/main/resources/dancingAnimals.wav";
-        File musicPath = new File (musicLocation);
-        AudioInputStream audioInput = AudioSystem.getAudioInputStream(musicPath);
-        Clip clip = AudioSystem.getClip();
-        clip.open(audioInput);
-        clip.start();
-
-    }
-
-
-
-
-
-
-
-
 
 }

@@ -1,4 +1,4 @@
-package org.example;
+package file_support;
 
 import java.util.Map;
 
@@ -6,7 +6,6 @@ public class DataSet {
 
     private int heightOfMap;
     private int widthOfMap;
-    private int mapSelection;
     private int numberOfPlants;
     private int energyFromPlant;
     private int dailyGrowthOfPlants;
@@ -17,9 +16,8 @@ public class DataSet {
     private int energyUsedToMakeChild;
     private int minNumberOfMutations;
     private int maxNumberOfMutations;
-    private int mutationSelection;
     private int lengthOfGenotype;
-    private int behaviourSelection;
+
 
     public DataSet(String nameOfFile) {
         FileUtility file = new FileUtility(nameOfFile);
@@ -27,7 +25,6 @@ public class DataSet {
 
         this.heightOfMap = allParameters.get("heightOfMap");
         this.widthOfMap = allParameters.get("widthOfMap");
-        this.mapSelection = allParameters.get("mapSelection");
         this.numberOfPlants = allParameters.get("numberOfPlants");
         this.energyFromPlant = allParameters.get("energyFromPlant");
         this.dailyGrowthOfPlants = allParameters.get("dailyGrowthOfPlants");
@@ -38,23 +35,17 @@ public class DataSet {
         this.energyUsedToMakeChild = allParameters.get("energyUsedToMakeChild");
         this.minNumberOfMutations = allParameters.get("minNumberOfMutations");
         this.maxNumberOfMutations = allParameters.get("maxNumberOfMutations");
-        this.mutationSelection = allParameters.get("mutationSelection");
         this.lengthOfGenotype = allParameters.get("lengthOfGenotype");
-        this.behaviourSelection = allParameters.get("behaviourSelection");
+
     }
 
-
-
+    // getters
     public int getHeightOfMap() {
         return heightOfMap;
     }
 
     public int getWidthOfMap() {
         return widthOfMap;
-    }
-
-    public int getMapSelection() {
-        return mapSelection;
     }
 
     public int getNumberOfPlants() {
@@ -97,16 +88,8 @@ public class DataSet {
         return maxNumberOfMutations;
     }
 
-    public int getMutationSelection() {
-        return mutationSelection;
-    }
-
     public int getLengthOfGenotype() {
         return lengthOfGenotype;
-    }
-
-    public int getBehaviourSelection() {
-        return behaviourSelection;
     }
 
     @Override
@@ -114,7 +97,6 @@ public class DataSet {
         return "DataSet{" +
                 "heightOfMap=" + heightOfMap +
                 ", widthOfMap=" + widthOfMap +
-                ", mapSelection=" + mapSelection +
                 ", numberOfPlants=" + numberOfPlants +
                 ", energyFromPlant=" + energyFromPlant +
                 ", dailyGrowthOfPlants=" + dailyGrowthOfPlants +
@@ -125,9 +107,7 @@ public class DataSet {
                 ", energyUsedToMakeChild=" + energyUsedToMakeChild +
                 ", minNumberOfMutations=" + minNumberOfMutations +
                 ", maxNumberOfMutations=" + maxNumberOfMutations +
-                ", mutationSelection=" + mutationSelection +
                 ", lengthOfGenotype=" + lengthOfGenotype +
-                ", behaviourSelection=" + behaviourSelection +
                 '}';
     }
 }

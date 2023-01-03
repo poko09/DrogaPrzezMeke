@@ -1,4 +1,4 @@
-package gui;
+package file_support;
 
 public class Counter {
     int count;

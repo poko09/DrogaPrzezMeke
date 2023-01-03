@@ -1,5 +1,11 @@
 package gui;
 
+import darwin_world.IAppObserver;
+import darwin_world.InfernalPortal;
+import darwin_world.Simulation;
+import darwin_world.Vector2d;
+import file_support.Counter;
+import file_support.DataSet;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -13,40 +19,43 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import org.example.*;
+import wildlife.Animal;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
 
-public class App extends Application implements IAppObserver{
+public class App extends Application implements IAppObserver {
 
+    // app constants
+    private final int SQUARE_SIZE = 30;
+    private final int MOVE_DELAY = 1000;
+    private final int RGBSIZE = 255;
+
+    // map and simulation properties
     private InfernalPortal map;
+    private Simulation simulation;
+    private boolean animalIsTracked;
+    private Animal trackedAnimal;
+    private Thread simulationThread;
+    private Counter counter;
+    private boolean isSuspended;
+
+    // data
+    String filePath;
+    private DataSet data;
+
+    // Gui elements
     private GridPane gridPane = new GridPane();
     private Label trackedAnimalLabel = new Label();
     private Label actualStatistics = new Label();
     private VBox mainVBox = new VBox(10);
-    private final int SQUARE_SIZE = 30;
-    private final int MOVE_DELAY = 1000;
-    private Simulation simulation;
-    private DataSet data;
-
-    private boolean isSuspended;
-    private boolean animalIsTracked;
-    private Animal trackedAnimal;
-    private Thread simulationThread;
-
-    private final int RGBSIZE = 255;
-    int numOfSimulation;
-    private Counter counter;
-    String filePath;
-
 
     public void init(Counter counter, String filePath) throws IOException {
         this.data = new DataSet(filePath);
         this.map = new InfernalPortal(this.data);
         this.counter = counter;
-        this.simulation = new Simulation(map, this.data, this.counter );
+        this.simulation = new Simulation(map, this.data, this.counter);
         this.filePath = filePath;
         simulation.addAppObserver(this);
         simulation.setMoveDelay(MOVE_DELAY);
@@ -77,11 +86,9 @@ public class App extends Application implements IAppObserver{
         });
         this.mainVBox.getChildren().addAll( this.gridPane, allButtonshbBox, this.trackedAnimalLabel, this.actualStatistics);
         this.drawGridPane(false);
-        Scene scene = new Scene(mainVBox, SQUARE_SIZE * (map.getWidth() + 6), SQUARE_SIZE * (map.getHeight() + 10));
+        Scene scene = new Scene(mainVBox, SQUARE_SIZE * (map.getWIDTH() + 6), SQUARE_SIZE * (map.getHEIGHT() + 10));
         primaryStage.setScene(scene);
         primaryStage.show();
-
-
     }
     @Override
     public void stop() {
@@ -106,10 +113,11 @@ public class App extends Application implements IAppObserver{
             }
         });
         startNewSimulationButton.setOnAction(event -> {
-            this.startNewSImulationLogic();
+            this.startNewSimulationLogic();
         });
     }
 
+    // buttons methods
     public void genotypeButtonLogic() throws FileNotFoundException {
         if (this.isSuspended) {
             System.out.println("button clicked");
@@ -126,7 +134,6 @@ public class App extends Application implements IAppObserver{
         }
     }
 
-
     public void resumeButtonLogic() {
         if (this.isSuspended) {
             this.simulationThread.resume();
@@ -135,6 +142,26 @@ public class App extends Application implements IAppObserver{
         }
     }
 
+    public void stopTrackingButtonLogic() {
+        if (this.animalIsTracked) {
+            this.animalIsTracked=false;
+            this.trackedAnimalLabel.setText("");
+            this.trackedAnimal=null;
+        }
+    }
+
+    public void animalButtonLogic(Button buttonAnimal, Animal animal) {
+        buttonAnimal.setOnAction(event -> {
+            if (this.isSuspended) {
+                this.animalIsTracked=true;
+                this.trackedAnimal=animal;
+                this.trackedAnimalLabel.setText("Data of the tracked animal: " + animal.toString());
+            }
+        });
+
+    }
+
+    // set labels methods
     public void setActualStatisticsLabel() {
         StringBuilder sb = new StringBuilder();
         sb.append("Actual statistics of the map");
@@ -148,30 +175,21 @@ public class App extends Application implements IAppObserver{
         this.actualStatistics.setText(sb.toString());
     }
 
-    public void stopTrackingButtonLogic() {
-        if (this.animalIsTracked) {
-            this.animalIsTracked=false;
-            this.trackedAnimalLabel.setText("");
-            this.trackedAnimal=null;
-        }
+    // draw gridPane methods
+    private void drawGridPane(boolean highlightStrongGenotypes) throws FileNotFoundException {
+        this.gridPane.setGridLinesVisible(false);
+        this.gridPane.getColumnConstraints().clear();
+        this.gridPane.getRowConstraints().clear();
+
+        this.gridPane.setGridLinesVisible(true);
+        this.gridPane.setAlignment(Pos.CENTER);
+
+        this.drawXY();
+        this.drawXAxis();
+        this.drawYAxis();
+        this.drawObjects(highlightStrongGenotypes);
+
     }
-
-    public void startNewSImulationLogic(){
-//        Thread lp = new Thread(new LineProcessor());
-        counter.increase();
-        LineProcessor lp = new LineProcessor(counter, this.filePath);
-
-        System.out.println("counter: "+ counter.getCount());
-        try {
-            lp.start(new Stage());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-
-
-
     public void drawXY() {
         Label label = new Label("y/x");
         this.gridPane.add(label,0,0);
@@ -180,7 +198,7 @@ public class App extends Application implements IAppObserver{
 
     private void drawYAxis() {
         int w = 1;
-        for (int i = map.getHeight()-1; i >= 0; i--) {
+        for (int i = map.getHEIGHT()-1; i >= 0; i--) {
             this.gridPane.getRowConstraints().add(new RowConstraints(SQUARE_SIZE));
             Label labelY = new Label(Integer.toString(i));
             labelY.setMinHeight(SQUARE_SIZE);
@@ -192,10 +210,9 @@ public class App extends Application implements IAppObserver{
         }
     }
 
-
     private void drawXAxis() {
         int k =1;
-        for (int j = 0; j < map.getWidth() ; j++) {
+        for (int j = 0; j < map.getWIDTH() ; j++) {
 
             this.gridPane.getColumnConstraints().add(new ColumnConstraints(SQUARE_SIZE));
             Label labelX = new Label(Integer.toString(j));
@@ -205,16 +222,16 @@ public class App extends Application implements IAppObserver{
             this.gridPane.add(labelX,k,0,1,1);
             GridPane.setHalignment(labelX, HPos.CENTER);
             k++;
-            }
+        }
     }
 
     public void drawObjects(boolean highlightStrongGenotypes) throws FileNotFoundException {
         int w = 1;
-        for (int i = this.map.getHeight()-1; i >= 0; i--) {
+        for (int i = this.map.getHEIGHT()-1; i >= 0; i--) {
             int k = 1;
-            for (int j = 0; j <= this.map.getWidth()-1; j++) {
+            for (int j = 0; j <= this.map.getWIDTH()-1; j++) {
                 Vector2d currentposition = new Vector2d(j,i);
-                if (this.map.isOccupied(currentposition)) {
+                if (this.map.isOccupiedByAnimal(currentposition)) {
                     for (Animal animal : map.animalObjectAt(currentposition)) {
                         Button animalButton;
                         if (highlightStrongGenotypes && animal.getGenotype().equals(this.map.mostPopularGenotype())) {
@@ -224,31 +241,32 @@ public class App extends Application implements IAppObserver{
                             int red = 0;
                             int green = 0;
                             int blue;
-                            blue = Math.min(RGBSIZE, RGBSIZE - animal.getEnergy());
+                            if (animal.getEnergy()>= RGBSIZE) {
+                                blue = 1;
+                            }
+                            else {
+                                blue = Math.min( RGBSIZE, RGBSIZE - animal.getEnergy());
+                            }
+
                             animalButton = drawAnimal(animal, red, green, blue);
                         }
                         gridPane.add(animalButton, k, w);
                         GridPane.setHalignment(animalButton, HPos.CENTER);
                         GridPane.setHalignment(animalButton, HPos.CENTER);
-
                     }
-
-
                 }
 
-                else if (this.map.isOccupiedByGrass(currentposition) && !this.map.isOccupied(currentposition)) {
-                        Button plantButton = drawPlant();
-                        gridPane.add(drawPlant(),k,w);
-                        GridPane.setHalignment(plantButton, HPos.CENTER);
-                        GridPane.setHalignment(plantButton, HPos.CENTER);
+                else if (this.map.isOccupiedByPlant(currentposition) && !this.map.isOccupiedByAnimal(currentposition)) {
+                    Button plantButton = drawPlant();
+                    gridPane.add(drawPlant(),k,w);
+                    GridPane.setHalignment(plantButton, HPos.CENTER);
+                    GridPane.setHalignment(plantButton, HPos.CENTER);
                 }
                 k++;
             }
             w++;
-
         }
     }
-
 
     public Button drawAnimal(Animal animal, int red, int green, int blue) {
         Button buttonAnimal = new Button();
@@ -266,34 +284,20 @@ public class App extends Application implements IAppObserver{
         plantButton.setMinWidth(SQUARE_SIZE-2);
         return plantButton;
     }
-    public void animalButtonLogic(Button buttonAnimal, Animal animal) {
-        buttonAnimal.setOnAction(event -> {
-            if (this.isSuspended) {
-                this.animalIsTracked=true;
-                this.trackedAnimal=animal;
-                this.trackedAnimalLabel.setText("Data of the tracked animal: " + animal.toString());
-            }
-        });
 
+    // methods connected with starting new simulations
+    public void startNewSimulationLogic(){
+        counter.increase();
+        LineProcessor lp = new LineProcessor(counter, this.filePath);
+
+        try {
+            lp.start(new Stage());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
-
-
-    private void drawGridPane(boolean highlightStrongGenotypes) throws FileNotFoundException {
-        this.gridPane.setGridLinesVisible(false);
-        this.gridPane.getColumnConstraints().clear();
-        this.gridPane.getRowConstraints().clear();
-
-        this.gridPane.setGridLinesVisible(true);
-        this.gridPane.setAlignment(Pos.CENTER);
-
-        this.drawXY();
-        this.drawXAxis();
-        this.drawYAxis();
-        this.drawObjects(highlightStrongGenotypes);
-
-    }
-
+    // methods connected with model observer
     @Override
     public void positionChangedApp() {
         Platform.runLater(() -> {

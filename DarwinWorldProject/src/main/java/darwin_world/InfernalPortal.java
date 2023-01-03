@@ -1,59 +1,107 @@
-package org.example;
+package darwin_world;
 
+import file_support.DataSet;
+import wildlife.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class InfernalPortal implements IPositionChangeObserver {
-    private int width;
-    private int height;
-    private ArrayList<Animal> tombs = new ArrayList();
+    private final int WIDTH;
+    private final int HEIGHT;
+    private ArrayList<Animal> tombs = new ArrayList<>();
+    protected Map<Vector2d, ArrayList <Animal>> animals = new HashMap<>();
+    protected Map<Vector2d, Plant> plants = new HashMap<>();
 
+    public InfernalPortal(DataSet data) {
+        this.WIDTH = data.getWidthOfMap();
+        this.HEIGHT = data.getHeightOfMap();
+    }
 
+    // getters
     public Map<Vector2d, ArrayList<Animal>> getAnimals() {
         return animals;
     }
 
-    protected Map<Vector2d, ArrayList <Animal>> animals = new HashMap<>();
-    protected Map<Vector2d, Plant> plants = new HashMap<>();
-
-    public InfernalPortal( DataSet data) {
-        this.width = data.getWidthOfMap();
-        this.height = data.getHeightOfMap();
-
+    public int getWIDTH() {
+        return WIDTH;
     }
-    // dodac rosliny
+
+    public Map<Vector2d, Plant> getPlants() {
+        return plants;
+    }
+    public int getHEIGHT() {
+        return HEIGHT;
+    }
+
+    public ArrayList<Animal> getTombs() {
+        return tombs;
+    }
+
+    // METHODS
+
+    // methods connected to positions of elements on the map
     public ArrayList<Animal> animalObjectAt(Vector2d position) {
         return this.animals.get(position);
     }
-    public boolean isOccupied(Vector2d position) {
+    public boolean isOccupiedByAnimal(Vector2d position) {
         return animalObjectAt(position) != null;
     }
-
     public boolean isOccupiedByPlant(Vector2d position) {
-        return this.plants.get(position)!=null;
-    }
-
-    public Object grassAt(Vector2d position) {
-        return this.plants.get(position);
-    }
-    public boolean isOccupiedByGrass(Vector2d position) {
         return this.plants.containsKey(position);
     }
 
-
-
     public boolean checkIfMagicPortal(Vector2d position) {
 
-        if (!position.precedes(new Vector2d(this.width-1, this.height-1)) || !position.follows(new Vector2d(0, 0))) {
+        if (!position.precedes(new Vector2d(this.WIDTH -1, this.HEIGHT -1)) || !position.follows(new Vector2d(0, 0))) {
             return true;
         }
         return false;
     }
 
-
-    public boolean checkIfDrawWithEating(Vector2d position) {
-        return this.animals.get(position).size() > 1;
+    public Vector2d generateRandomPositionOnTheMap() {
+        int randomX = new Random().nextInt(this.WIDTH);
+        int randomY = new Random().nextInt(this.HEIGHT);
+        return new Vector2d(randomX, randomY);
     }
+
+    // methods connected to placing and removing elements from the map
+    public void placeToxicCorpsesOnTheMap(ToxicCorpses toxicCorpse) {
+        plants.put(toxicCorpse.getPosition(), toxicCorpse);
+
+    }
+    public void placeForestedEquator(ForestedEquator forestedEquator) {
+            plants.put(forestedEquator.getPosition(), forestedEquator);
+
+    }
+    public void placeAnimalOnTheMap(Animal animal, Simulation simulation) {
+        if (animals.containsKey(animal.getPosition())) {
+            animals.get(animal.getPosition()).add(animal);
+        }
+        else {
+            ArrayList<Animal> animalsList = new ArrayList<>();
+            animalsList.add(animal);
+            animals.put(animal.getPosition(), animalsList);
+        }
+        simulation.addNewGenotype(animal.getGenotype());
+    }
+
+    public void deleteDeadAnimalsFromTheMap(Simulation simulation) {
+        for (ArrayList<Animal> listOfAnimals : animals.values()) {
+            ArrayList<Animal> listOfAnimalsCopy = new ArrayList<>();
+            listOfAnimalsCopy.addAll(listOfAnimals);
+            for (Animal animal : listOfAnimalsCopy) {
+                if(animal.getEnergy()<=0) {
+                    animal.die(simulation);
+                    this.tombs.add(animal);
+                    listOfAnimals.remove(animal);
+                    simulation.reduceNumberOfAnimals();
+                }
+            }
+        }
+        animals.values().removeIf(value -> value.size() == 0);
+    }
+
+    // methods connected to solving draws
 
     public Animal solveDrawWithEatingOrReproducing(ArrayList<Animal> animals) {
         animals = this.theStrongestAnimalsFromList(animals);
@@ -90,48 +138,7 @@ public class InfernalPortal implements IPositionChangeObserver {
         return animalsWithMostKids;
     }
 
-    public void placeToxicCorpsesOnTheMap(ToxicCorpses toxicCorpse) {
-        if (!plants.containsKey(toxicCorpse.getPosition())) {
-            plants.put(toxicCorpse.getPosition(), toxicCorpse);
-        }
-
-    }
-    public void placeForestedEquatoria(ForestedEquatoria forestedEquatoria) {
-        // ToDo zrobic tak zeby roslina sie zawsze dodawala
-            if (!plants.containsKey(forestedEquatoria.getPosition())) {
-                plants.put(forestedEquatoria.getPosition(), forestedEquatoria);
-            }
-
-
-    }
-
-
-
-
-    public void placeAnimalOnTheMap(Animal animal, Simulation simulation) {
-        if (animals.containsKey(animal.getPosition())) {
-            animals.get(animal.getPosition()).add(animal);
-        }
-        else {
-            ArrayList<Animal> animalsList = new ArrayList<>();
-            animalsList.add(animal);
-            animals.put(animal.getPosition(), animalsList);
-        }
-        simulation.addNewGenotype(animal.getGenotype());
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public Map<Vector2d, Plant> getPlants() {
-        return plants;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
+    // methods connected to model observer
     @Override
     public void positionChanged(Vector2d oldPosition, Vector2d newPosition, Animal animal) {
         ArrayList<Animal> listOfAnimalsAtThisPosition = this.animals.get(oldPosition);
@@ -139,7 +146,6 @@ public class InfernalPortal implements IPositionChangeObserver {
             if (listOfAnimalsAtThisPosition.contains(animal)) {
                 listOfAnimalsAtThisPosition.remove(animal);
             }
-
         }
         else {
                 this.animals.remove(oldPosition);
@@ -152,43 +158,9 @@ public class InfernalPortal implements IPositionChangeObserver {
             animalsList.add(animal);
             animals.put(newPosition, animalsList);
         }
-
-        }
-
-
-    public Vector2d generateRandomPositionOnTheMap() {
-        int randomX = new Random().nextInt(this.width);
-        int randomY = new Random().nextInt(this.height);
-        return new Vector2d(randomX, randomY);
     }
 
-    public ArrayList<Animal> getTombs() {
-        return tombs;
-    }
-
-    public void deleteDeadAnimalsFromTheMap(Simulation simulation) {
-        // czy mozna jakos lepiej po tym iterowac
-        for (ArrayList<Animal> listOfAnimals : animals.values()) {
-            ArrayList<Animal> listOfAnimalsCopy = new ArrayList<>();
-            listOfAnimalsCopy.addAll(listOfAnimals);
-            for (Animal animal : listOfAnimalsCopy) {
-                if(animal.getEnergy()<=0) {
-                    animal.die(simulation);
-                    this.tombs.add(animal);
-                    listOfAnimals.remove(animal);
-                    simulation.reduceNumberOfAnimals();
-                }
-            }
-            }
-        animals.values().removeIf(value -> value.size() == 0);
-//                this.animals.values().stream().
-//                forEach(listOfAnimals -> listOfAnimals.
-//                removeIf(animal -> animal.getEnergy() <=0));
-
-    }
-
-
-
+    // helper method
     public Genotype mostPopularGenotype() {
         HashMap<Genotype, ArrayList<Animal>> allGenotypes = new HashMap<>();
 
@@ -204,12 +176,10 @@ public class InfernalPortal implements IPositionChangeObserver {
 
             }
         }
-        // Todo: poprawic to zeby było prosciej
         Collection<ArrayList<Animal>> collectionOfAnimals =  allGenotypes.values();
         ArrayList<ArrayList<Animal>> arrayListOfAnimals = new ArrayList<>(collectionOfAnimals);
         listComparator comparator = new listComparator();
         Collections.sort(arrayListOfAnimals, comparator);
-        // ToDo dodac zeby remisy tez sie dodawaly
         return arrayListOfAnimals.get(0).get(0).getGenotype();
     }
 

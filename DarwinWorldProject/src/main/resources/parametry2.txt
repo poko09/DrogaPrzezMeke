@@ -1,0 +1,13 @@
+heightOfMap: 25
+widthOfMap: 25
+numberOfPlants: 80
+energyFromPlant: 8
+dailyGrowthOfPlants: 10
+plantSelection: 1
+numberOfAnimals: 40
+initialEnergyOfAnimals: 200
+energyRequiredToReproduce: 26
+energyUsedToMakeChild: 25
+minNumberOfMutations: 0
+maxNumberOfMutations: 0
+lengthOfGenotype: 4
