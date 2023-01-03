@@ -3,19 +3,20 @@ package gui;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class WriteToCSV {
 
     String fileName;
     File newFile;
+    String[] nameOfColumns ={"Day of simulation", "Number of animals", "Number of plants", "Number of free fields",
+            "Most popular genotype", "Average energy", "Average life length"};;
 
 
-    public WriteToCSV(String name) {
+    public WriteToCSV(String name) throws IOException {
         this.fileName=name;
         String newFileName = fileName + ".csv";
         this.newFile = new File(newFileName);
+        this.appendDataToAFile(nameOfColumns, false);
 
     }
 
@@ -27,17 +28,20 @@ public class WriteToCSV {
 
 
     public String convertToCSV(String[] data) {
-        return Stream.of(data)
-                .collect(Collectors.joining(","));
+        return String.join(", ", data);
     }
 
-    public void writeToFile(String data) throws IOException {
 
-        FileWriter writer = new FileWriter(newFile,true);
+    public void appendDataToAFile(String[] data, boolean appendToAFile) throws IOException {
+
+        //deleteLastLane();
+        //updateValues(data);
+        FileWriter writer = new FileWriter(newFile,appendToAFile);
+        writer.write(convertToCSV(data));
         writer.write("\n");
-        writer.write(convertToCSV(new String[]{data}));
 
 
         writer.close();
     }
 }
+

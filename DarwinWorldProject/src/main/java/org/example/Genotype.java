@@ -119,6 +119,14 @@ public class Genotype {
 
     @Override
     public String toString() {
-        return "Genotype: " + Arrays.toString(arrayOfGens);
+        String array = "[";
+        for (Gen gen : this.getArrayOfGens()) {
+            array = array + gen.getRotation() + " ";
+        }
+        array+="]";
+        return array;
     }
+
+
+
 }

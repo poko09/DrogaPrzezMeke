@@ -21,6 +21,7 @@ public class App extends Application implements IAppObserver{
     private InfernalPortal map;
     private GridPane gridPane = new GridPane();
     private Label trackedAnimalLabel = new Label();
+    private Label actualStatistics = new Label();
     private VBox mainVBox = new VBox();
     private final int SQUARE_SIZE = 30;
     private final int MOVE_DELAY = 1000;
@@ -35,8 +36,8 @@ public class App extends Application implements IAppObserver{
     private final int RGBSIZE = 255;
 
 
-    WriteToCSV csvFile = new WriteToCSV("Map Statistics" );
-    public void init() {
+
+    public void init() throws IOException {
         this.data = new DataSet("parametry.txt");
         this.map = new InfernalPortal(this.data);
         this.simulation = new Simulation(map, this.data);
@@ -54,15 +55,14 @@ public class App extends Application implements IAppObserver{
         Button resumeButton = new Button("Resume Simulation");
         Button stopTrackingButton = new Button("Stop tracking");
         Button genotypeButton = new Button("Most popular genotype");
-        Button saveDataButton = new Button("Save Data");
 
         allButtonshbBox.setSpacing(10.0);
         allButtonshbBox.setAlignment(Pos.BOTTOM_CENTER);
-        allButtonshbBox.getChildren().addAll(stopButton,resumeButton, stopTrackingButton, genotypeButton, saveDataButton);
+        allButtonshbBox.getChildren().addAll(stopButton,resumeButton, stopTrackingButton, genotypeButton);
 
-        this.setButtonFunctions(stopButton,resumeButton, stopTrackingButton, genotypeButton, saveDataButton);
+        this.setButtonFunctions(stopButton,resumeButton, stopTrackingButton, genotypeButton);
 
-        this.mainVBox.getChildren().addAll(allButtonshbBox, this.gridPane, this.trackedAnimalLabel);
+        this.mainVBox.getChildren().addAll(allButtonshbBox, this.gridPane, this.trackedAnimalLabel, this.actualStatistics);
         this.drawGridPane(false);
         Scene scene = new Scene(mainVBox, SQUARE_SIZE * (map.getWidth() + 5), SQUARE_SIZE * (map.getHeight() + 5));
         primaryStage.setScene(scene);
@@ -71,7 +71,7 @@ public class App extends Application implements IAppObserver{
 
     }
 
-    public void setButtonFunctions(Button stopButton, Button resumeButton, Button stopTrackingButton, Button genotypeButton, Button saveDataButton) {
+    public void setButtonFunctions(Button stopButton, Button resumeButton, Button stopTrackingButton, Button genotypeButton) {
         stopButton.setOnAction(event -> {
             this.stopButtonLogic();
         });
@@ -88,9 +88,7 @@ public class App extends Application implements IAppObserver{
                 throw new RuntimeException(e);
             }
         });
-        saveDataButton.setOnAction(event -> {
-            this.saveDataLogic();
-        });
+
     }
 
     public void genotypeButtonLogic() throws FileNotFoundException {
@@ -105,6 +103,7 @@ public class App extends Application implements IAppObserver{
         if (!this.isSuspended) {
             this.simulationThread.suspend();
             this.isSuspended =true;
+            this.setActualStatisticsLabel();
         }
     }
 
@@ -112,7 +111,21 @@ public class App extends Application implements IAppObserver{
         if (this.isSuspended) {
             this.simulationThread.resume();
             this.isSuspended =false;
+            this.actualStatistics.setText("");
         }
+    }
+
+    public void setActualStatisticsLabel() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Actual statistics of the map");
+        sb.append("\nDay of the simulation: " + simulation.getDayOfSimulation());
+        sb.append("\nNumber of animals on the map: " + simulation.getNumberOfAnimals());
+        sb.append( "\nNumber of plants:  " + simulation.getNumberOfPlants());
+        sb.append( "\nNumber of free fields: " + simulation.getNumberOfFreeFields());
+        sb.append("\nMost popular genotype: " + map.mostPopularGenotype());
+        sb.append("\nAverage energy of living animals: "+simulation.calculateAverageEnergy());
+        sb.append("\nAverage life length of dead animals: " + simulation.calculateAverageLifeLength());
+        this.actualStatistics.setText(sb.toString());
     }
 
     public void stopTrackingButtonLogic() {
@@ -122,19 +135,7 @@ public class App extends Application implements IAppObserver{
             this.trackedAnimal=null;
         }
     }
-    public void saveDataLogic() {
-        this.updateFile();
-    }
-    public void updateFile() {
 
-        try {
-            csvFile.writeToFile("To jest probny zapis");
-        }
-        catch (IOException ex) {
-            System.out.println("close the file");
-        }
-
-    }
 
 
 
@@ -179,10 +180,9 @@ public class App extends Application implements IAppObserver{
         for (int i = this.map.getHeight()-1; i >= 0; i--) {
             int k = 1;
             for (int j = 0; j <= this.map.getWidth()-1; j++) {
-                //ToDo: dodac rosliny
-                // w domysle przez zwierzeta
-                if (this.map.isOccupied(new Vector2d(j, i))) {
-                    for (Animal animal : map.animalObjectAt(new Vector2d(j, i))) {
+                Vector2d currentposition = new Vector2d(j,i);
+                if (this.map.isOccupied(currentposition)) {
+                    for (Animal animal : map.animalObjectAt(currentposition)) {
                         Button animalButton;
                         if (highlightStrongGenotypes && animal.getGenotype().equals(this.map.mostPopularGenotype())) {
                             animalButton = drawAnimal(animal, 255, 0, 0);
@@ -202,6 +202,13 @@ public class App extends Application implements IAppObserver{
 
 
                 }
+
+                else if (this.map.isOccupiedByGrass(currentposition) && !this.map.isOccupied(currentposition)) {
+                        Button plantButton = drawPlant();
+                        gridPane.add(drawPlant(),k,w);
+                        GridPane.setHalignment(plantButton, HPos.CENTER);
+                        GridPane.setHalignment(plantButton, HPos.CENTER);
+                }
                 k++;
             }
             w++;
@@ -218,12 +225,20 @@ public class App extends Application implements IAppObserver{
         buttonAnimal.setMinWidth(SQUARE_SIZE-2);
         return buttonAnimal;
     }
+
+    public Button drawPlant() {
+        Button plantButton = new Button();
+        plantButton.setBackground(new Background(new BackgroundFill(Color.rgb(50,205,50), CornerRadii.EMPTY, Insets.EMPTY)));
+        plantButton.setMinHeight(SQUARE_SIZE-2);
+        plantButton.setMinWidth(SQUARE_SIZE-2);
+        return plantButton;
+    }
     public void animalButtonLogic(Button buttonAnimal, Animal animal) {
         buttonAnimal.setOnAction(event -> {
             if (this.isSuspended) {
                 this.animalIsTracked=true;
                 this.trackedAnimal=animal;
-                this.trackedAnimalLabel.setText(animal.toString());
+                this.trackedAnimalLabel.setText("Data of the tracked animal: " + animal.toString());
             }
         });
 
@@ -252,8 +267,9 @@ public class App extends Application implements IAppObserver{
             try {
                 drawGridPane(false);
                 if (animalIsTracked) {
-                    this.trackedAnimalLabel.setText(this.trackedAnimal.toString());
+                    this.trackedAnimalLabel.setText("Data of tracked animal\n" + this.trackedAnimal.toString());
                 }
+
 
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
@@ -261,26 +277,7 @@ public class App extends Application implements IAppObserver{
         });
     }
 
-//    @Override
-//    public void run() {
-//        this.init();
-//        try {
-//            this.start(new Stage());
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
 
-    //        addNewSimulation.setOnAction(click -> {
-//            System.out.println("new simulation");
-//            this.addNewSimulation();
-//        });
-
-    //    public void addNewSimulation() {
-//        App app = new App();
-//        Thread thread = new Thread(app);
-//        thread.start();
-//    }
 }
 
 

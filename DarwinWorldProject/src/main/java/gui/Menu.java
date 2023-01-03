@@ -13,6 +13,8 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+
 
 public class Menu extends Application {
 
@@ -85,14 +87,18 @@ public class Menu extends Application {
 
     private void setButtonFunctions(Button start) {
         start.setOnAction( event -> {
-           runApplication();
+            try {
+                runApplication();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         });
 
 
 
     }
 
-    public void runApplication() {
+    public void runApplication() throws IOException {
         App application = new App();
         application.init();
         try {

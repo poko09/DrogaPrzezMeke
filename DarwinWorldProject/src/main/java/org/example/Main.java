@@ -15,30 +15,6 @@ public class Main {
 
         }
 
-//        DataSet ds = new DataSet("parametry.txt");
-//        InfernalPortal mapka = new InfernalPortal(ds);
-//        Simulation engine = new Simulation(mapka, ds);
-//        engine.simulationOfOneDay();
-////        System.out.println(mapka);
-//        engine.simulationOfOneDay();
-////        System.out.println(mapka);
-//        engine.simulationOfOneDay();
-////        System.out.println(mapka);
-//        engine.simulationOfOneDay();
-////        System.out.println(mapka);
-//        engine.simulationOfOneDay();
-////        System.out.println(mapka);
-//        engine.simulationOfOneDay();
-////        System.out.println(mapka);
-////        engine.run();
-//        engine.simulationOfOneDay();
-//
-//        System.out.println(mapka.getAnimals().toString());
-
-
-
-
-
 
 
 

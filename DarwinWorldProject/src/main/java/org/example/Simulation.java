@@ -1,5 +1,8 @@
 package org.example;
 
+import gui.WriteToCSV;
+
+import java.io.IOException;
 import java.util.*;
 
 public class Simulation implements Runnable {
@@ -11,17 +14,37 @@ public class Simulation implements Runnable {
     private InfernalPortal map;
     private int numberOfAnimals;
     private int numberOfPlants;
-    // ToDo: uzupelnic logike do tego
-    private int numberOfFreeFields;
+
     private ArrayList<Genotype> listOfGenotypes;
-    private int avarageEnergyOfAnimals;
+
     private int moveDelay;
     private List<IAppObserver> appObserverList;
     private DataSet data;
     private int dayOfSimulation;
+    WriteToCSV csvFile = new WriteToCSV("Map Statistics" );
 
+    public int getNumberOfAnimals() {
+        return numberOfAnimals;
+    }
 
-    public Simulation(InfernalPortal map, DataSet data) {
+    public int getNumberOfPlants() {
+        return this.map.getPlants().size();
+    }
+
+    public int getNumberOfFreeFields() {
+        int numOfFreeFields=0;
+        for(int i = 0; i<this.map.getWidth(); i++){
+            for(int j = 0; j<this.map.getHeight();j++) {
+                Vector2d position = new Vector2d(i,j);
+                if (!this.map.isOccupiedByPlant(position) && !this.map.isOccupied(position)) {
+                    numOfFreeFields++;
+                }
+            }
+        }
+        return numOfFreeFields;
+    }
+
+    public Simulation(InfernalPortal map, DataSet data) throws IOException {
         this.STARTING_NUMBER_OF_ANIMALS = data.getNumberOfAnimals();
         this.STARTING_ENERGY_OF_ANIMAL = data.getInitialEnergyOfAnimals();
         this.STARTING_NUMBER_OF_PLANTS = data.getNumberOfPlants();
@@ -59,16 +82,14 @@ public class Simulation implements Runnable {
         for (ArrayList<Animal> listOfAnimals : animalsCopy.values()) {
             if (this.map.getPlants().containsKey(listOfAnimals.get(0).getPosition())) {
                 if (listOfAnimals.size() > 1) {
-                    System.out.println("eat");
+
                     Animal eater = this.map.solveDrawWithEatingOrReproducing(listOfAnimals);
-                    //System.out.println("Zwierze cos je");
+
                     eater.eat();
-//                    eater.
                     map.getPlants().remove(eater.getPosition());
                 }
                 else {
                     listOfAnimals.get(0).eat();
-                    System.out.println("eat");
                     map.getPlants().remove(listOfAnimals.get(0).getPosition());
                 }
             }
@@ -87,43 +108,43 @@ public class Simulation implements Runnable {
         }
     }
     public void forestedEquatoriaGrowth(int numberOfPlants) {
-
+        Random rand = new Random();
         int width = this.map.getWidth();
         int height = this.map.getHeight();
-//        int width = data.getWidthOfMap();
-//        int height = data.getHeightOfMap();
-        int insideEquatoria = (int) (0.8 * numberOfPlants); //preferred place to growth
-        int outsideEquatoria = numberOfPlants - insideEquatoria;
+
+        //int insideEquatoria = (int) (0.8 * numberOfPlants); //preferred place to growth
+       // int outsideEquatoria = numberOfPlants - insideEquatoria;
 
         int upperEquatoria = (int) (0.6 * height);
         int lowerEqatoria = (int)(0.4 * height);
 
-        Random rand = new Random();
+        //        toDo zdekomponuj
+        for (int i=0; i < numberOfPlants;i++) {
+            int randomNum = rand.nextInt(5);
+            System.out.println("random num " + randomNum);
+            if (randomNum < 4) {
 
-        //        toDo zdekomponuj to byczku!
-
-        for(int i = 0; i < insideEquatoria; i++) {
-
-            int x = rand.nextInt(width);
-            int y = rand.nextInt((upperEquatoria - lowerEqatoria) + 1) + lowerEqatoria;
-            ForestedEquatoria fe = new ForestedEquatoria(new Vector2d(x, y));
-            map.placeForestedEquatoria(fe);
-
-        }
-
-        for(int i = 0; i < outsideEquatoria; i++) {
-            if(i%2==0) {
                 int x = rand.nextInt(width);
-                int y = rand.nextInt((height- upperEquatoria)+1) + upperEquatoria;
+                int y = rand.nextInt((upperEquatoria - lowerEqatoria) + 1) + lowerEqatoria;
                 ForestedEquatoria fe = new ForestedEquatoria(new Vector2d(x, y));
                 map.placeForestedEquatoria(fe);
 
-            }
-            else {
-                int x = rand.nextInt(width);
-                int y = rand.nextInt((lowerEqatoria) + 1);
-                ForestedEquatoria fe = new ForestedEquatoria(new Vector2d(x, y));
-                map.placeForestedEquatoria(fe);
+            } else {
+                //  Todo zmienic to zeby byl przedzial, bez ifa
+                int randomNum2 = rand.nextInt(2);
+                if (randomNum2 == 0) {
+                    int x = rand.nextInt(width);
+                    int y = rand.nextInt((height - upperEquatoria) + 1) + upperEquatoria;
+                    ForestedEquatoria fe = new ForestedEquatoria(new Vector2d(x, y));
+                    // ToDo to powinno byc abstrakcyjne
+                    map.placeForestedEquatoria(fe);
+
+                } else {
+                    int x = rand.nextInt(width);
+                    int y = rand.nextInt((lowerEqatoria) + 1);
+                    ForestedEquatoria fe = new ForestedEquatoria(new Vector2d(x, y));
+                    map.placeForestedEquatoria(fe);
+                }
             }
         }
     }
@@ -145,7 +166,7 @@ public class Simulation implements Runnable {
         }
 
         ArrayList<Vector2d> allPlacesOnMap = new ArrayList<>();
-
+        // to nie powinno byc chyba mniejsze lub rowne
         for(int i = 0; i<=height; i++){
             for(int j = 0; j<=width;j++) {
                 allPlacesOnMap.add(new Vector2d(j,i));
@@ -182,16 +203,32 @@ public class Simulation implements Runnable {
     public void addNewGenotype(Genotype genotype) {
         this.listOfGenotypes.add(genotype);
     }
-    public void calculateAverageEnergy() {
+    public double calculateAverageEnergy() {
         int energy = 0;
+        int count = 0;
         // faknie byloby zmienic na streama
         for (ArrayList<Animal> listOfAnimals : this.map.getAnimals().values()) {
             for (Animal animal : listOfAnimals) {
                 energy+=animal.getEnergy();
+                count++;
             }
         }
-        this.avarageEnergyOfAnimals=energy/this.numberOfAnimals;
+        return Math.round((double)(energy/count));
     }
+
+    public double calculateAverageLifeLength () {
+        int allLifeLength = 0;
+        if (this.map.getTombs().size() == 0) {
+            return 0;
+        }
+        for (Animal animal : this.map.getTombs()) {
+                allLifeLength+=animal.getAge();
+
+        }
+        return Math.round((double)allLifeLength/this.map.getTombs().size());
+    }
+
+
     public void moveAllAnimals() {
         HashMap<Vector2d, ArrayList <Animal>> animalsCopy = new HashMap<Vector2d, ArrayList <Animal>>(this.map.getAnimals());
         for (ArrayList<Animal> listOfAnimals : animalsCopy.values()) {
@@ -250,7 +287,7 @@ public class Simulation implements Runnable {
 
     public void simulationOfOneDay() {
         this.dayOfSimulation+=1;
-        System.out.println(this.dayOfSimulation);
+        System.out.println("Day of simulation " + this.dayOfSimulation);
         // te funkcje moze jednak lepiej wrzucic do symulacji
         this.map.deleteDeadAnimalsFromTheMap(this);
         this.moveAllAnimals();
@@ -258,7 +295,7 @@ public class Simulation implements Runnable {
         this.reproductionOfAnimal();
         if(this.dayOfSimulation >1){this.growthOfNewPlants(this.data.getDailyGrowthOfPlants());}
         this.animalsGetsOlder();
-        System.out.println(this.map);
+        this.updateFile();
 
     }
 
@@ -288,6 +325,31 @@ public class Simulation implements Runnable {
         for (IAppObserver observer: this.appObserverList){
             observer.positionChangedApp();
         }
+    }
+
+    public void updateFile() {
+
+        String[] dataArray = {
+                String.valueOf(this.getDayOfSimulation()),
+                String.valueOf(this.getNumberOfAnimals()),
+                String.valueOf( this.getNumberOfPlants()),
+                String.valueOf( this.getNumberOfFreeFields()),
+                // ToDo tu chyba nie musi byc string
+                String.valueOf(map.mostPopularGenotype()),
+                String.valueOf(this.calculateAverageEnergy()),
+                String.valueOf(this.calculateAverageLifeLength())
+        };
+
+        try {
+            csvFile.appendDataToAFile(dataArray, true);
+        }
+        catch (IOException ex) {
+            System.out.println("close the file");
+        }
+
+
+
+
     }
 
 }
