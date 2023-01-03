@@ -5,7 +5,7 @@ import javafx.application.Application;
 
 public class Main {
     public static void main(String[] args) {
-        // Before running the program please remember to volume up :)
+        // Before running the program please remember to volume up! :)
         try {
             Application.launch(Menu.class, args);
         }
