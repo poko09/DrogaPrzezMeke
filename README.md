@@ -18,7 +18,8 @@ Projekt - generator ewolucyjny, zawierający symulację świata Darwinowskiego
 - mapa: 1 wariant -> piekielny portal 🗺️
 - roślinki: 2 warianty -> zalesione równiki 🌳, toksyczne trupy 🌵
 - zachowanie: 1 wariant -> pełna predestynacja 🙏
-- 
+
+
 <br> </br>
 ### Parametry w pliku:
 
