@@ -1,10 +1,12 @@
 package gui;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -12,6 +14,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import javax.sound.sampled.*;
 import java.io.File;
@@ -20,72 +23,55 @@ import java.io.IOException;
 
 public class Menu extends Application {
 
-
+    private Counter counter=new Counter();
+    private TextField txtNameOfFilePath = new TextField("parametry.txt");
 
 
     @Override
     public void start(Stage primaryStage) throws Exception {
 
+        //music();
+        VBox root = new VBox(50);
 
-        Text text = new Text();
-        music();
-        text.setText("Welcome to Darwin World Simulation!");
-        StackPane root = new StackPane();
-        Button leftBox = new Button("Start Simulation" );
-        VBox vbox = new VBox(leftBox);
-        root.getChildren().addAll(text, vbox);
+        Text welcomeText = new Text();
+        welcomeText.setText("Welcome to Darwin World Simulation!");
+        welcomeText.setTextAlignment(TextAlignment.CENTER);
+        welcomeText.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+        //welcomeText.setTextAlignment(30);
 
-        final Scene scene = new Scene(root,400, 400, Color.DARKSEAGREEN);
+        Label labelStart = new Label("Press the button if you are ready to start simulation");
+        labelStart.setFont(Font.font("Arial", 15));
+        Button startButton = new Button("Start Simulation" );
+        startButton.setMinWidth(100);
+        startButton.setMinHeight(50);
+        startButton.setFont(Font.font("Arial", FontWeight.BOLD, 18));
+        VBox vboxStart = new VBox(10,labelStart, startButton);
+        vboxStart.setAlignment(Pos.CENTER);
+
+        Label labelFilePath = new Label("Enter the path of the file from which you want to retrieve the data");
+        labelFilePath.setAlignment(Pos.CENTER);
+        labelFilePath.setFont(Font.font("Arial", 15));
+        VBox pathNameVBox = new VBox(10,labelFilePath, this.txtNameOfFilePath);
+        vboxStart.setAlignment(Pos.CENTER);
+
+        root.getChildren().addAll( welcomeText, pathNameVBox, vboxStart);
+        root.setAlignment(Pos.CENTER);
+
+        final Scene scene = new Scene(root,450, 450, Color.DARKSEAGREEN);
         scene.setFill(Color.DARKSEAGREEN);
-        text.setTextAlignment(TextAlignment.CENTER);
-        text.setFont(Font.font("Arial", FontWeight.BOLD, 20));
-
-
-//        leftBox.setLayoutX(200);
-        vbox.setAlignment(Pos.BASELINE_LEFT);
-
-
-//        leftBox.setAlignment(Pos.CENTER_LEFT);
-//        HBox.setHgrow(leftBox, Priority.ALWAYS);
-//        root.setBottom(leftBox);
-
         primaryStage.setTitle("DarwinWorldSimulation");
-
-        setButtonFunctions(leftBox);
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                System.exit(0);
+            }
+        });
+        setButtonFunctions(startButton);
 
         primaryStage.setScene(scene);
         primaryStage.show();
 
-//
-//        // set title for the stage
-//        stage.setTitle("Darwin World Simulation");
-//
-//        // create a label
-//        Label label = new Label("Welcome to DarwinWorldSimulation");
-//
-//        Text text = new Text();
-//        text.setText("Welcome to Darwin World Simulation!");
-//        text.setTextAlignment(TextAlignment.CENTER);
-//        text.setFont(Font.font("Arial", FontWeight.BOLD, 20));
-//
-//        // relocate label
-//
-//
-//        // create a Pane
-//        Pane pane = new Pane();
-//
-//        Button button = new Button("Start Simulation");
-//        pane.getChildren().addAll(button, text);
-//
-//        button.relocate(150,150);
-//
-//        // create a scene
-//        Scene scene = new Scene(pane, 400, 300);
-//
-//        // set the scene
-//        stage.setScene(scene);
-//
-//        stage.show();
+
     }
 
     private void setButtonFunctions(Button start) {
@@ -102,8 +88,9 @@ public class Menu extends Application {
     }
 
     public void runApplication() throws IOException {
+
         App application = new App();
-        application.init();
+        application.init(this.counter, this.txtNameOfFilePath.getText());
         try {
             application.start(new Stage());
         } catch (Exception e) {
@@ -121,6 +108,8 @@ public class Menu extends Application {
         clip.start();
 
     }
+
+
 
 
 

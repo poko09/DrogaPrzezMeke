@@ -2,6 +2,7 @@ package gui;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -11,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import org.example.*;
 
 import java.io.FileNotFoundException;
@@ -23,7 +25,7 @@ public class App extends Application implements IAppObserver{
     private GridPane gridPane = new GridPane();
     private Label trackedAnimalLabel = new Label();
     private Label actualStatistics = new Label();
-    private VBox mainVBox = new VBox();
+    private VBox mainVBox = new VBox(10);
     private final int SQUARE_SIZE = 30;
     private final int MOVE_DELAY = 1000;
     private Simulation simulation;
@@ -35,19 +37,24 @@ public class App extends Application implements IAppObserver{
     private Thread simulationThread;
 
     private final int RGBSIZE = 255;
+    int numOfSimulation;
+    private Counter counter;
+    String filePath;
 
 
-
-    public void init() throws IOException {
-        this.data = new DataSet("parametry.txt");
+    public void init(Counter counter, String filePath) throws IOException {
+        this.data = new DataSet(filePath);
         this.map = new InfernalPortal(this.data);
-        this.simulation = new Simulation(map, this.data);
+        this.counter = counter;
+        this.simulation = new Simulation(map, this.data, this.counter );
+        this.filePath = filePath;
         simulation.addAppObserver(this);
         simulation.setMoveDelay(MOVE_DELAY);
         this.isSuspended =false;
         this.animalIsTracked=false;
         this.simulationThread = new Thread(simulation);
         simulationThread.start();
+
     }
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -56,20 +63,29 @@ public class App extends Application implements IAppObserver{
         Button resumeButton = new Button("Resume Simulation");
         Button stopTrackingButton = new Button("Stop tracking");
         Button genotypeButton = new Button("Most popular genotype");
-        Button startNewSimulation = new Button("Start New");
-        allButtonshbBox.setSpacing(10.0);
+        Button startNewSimulation = new Button("Start New Simulation");
+        allButtonshbBox.setSpacing(15);
         allButtonshbBox.setAlignment(Pos.BOTTOM_CENTER);
         allButtonshbBox.getChildren().addAll(stopButton,resumeButton, stopTrackingButton, genotypeButton, startNewSimulation);
 
         this.setButtonFunctions(stopButton,resumeButton, stopTrackingButton, genotypeButton, startNewSimulation);
-
-        this.mainVBox.getChildren().addAll(allButtonshbBox, this.gridPane, this.trackedAnimalLabel, this.actualStatistics);
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                stop();
+            }
+        });
+        this.mainVBox.getChildren().addAll( this.gridPane, allButtonshbBox, this.trackedAnimalLabel, this.actualStatistics);
         this.drawGridPane(false);
-        Scene scene = new Scene(mainVBox, SQUARE_SIZE * (map.getWidth() + 5), SQUARE_SIZE * (map.getHeight() + 5));
+        Scene scene = new Scene(mainVBox, SQUARE_SIZE * (map.getWidth() + 6), SQUARE_SIZE * (map.getHeight() + 10));
         primaryStage.setScene(scene);
         primaryStage.show();
 
 
+    }
+    @Override
+    public void stop() {
+        simulationThread.stop();
     }
 
     public void setButtonFunctions(Button stopButton, Button resumeButton, Button stopTrackingButton, Button genotypeButton, Button startNewSimulationButton) {
@@ -110,6 +126,7 @@ public class App extends Application implements IAppObserver{
         }
     }
 
+
     public void resumeButtonLogic() {
         if (this.isSuspended) {
             this.simulationThread.resume();
@@ -141,8 +158,10 @@ public class App extends Application implements IAppObserver{
 
     public void startNewSImulationLogic(){
 //        Thread lp = new Thread(new LineProcessor());
-        LineProcessor lp = new LineProcessor();
+        counter.increase();
+        LineProcessor lp = new LineProcessor(counter, this.filePath);
 
+        System.out.println("counter: "+ counter.getCount());
         try {
             lp.start(new Stage());
         } catch (Exception e) {
@@ -266,6 +285,7 @@ public class App extends Application implements IAppObserver{
         this.gridPane.getRowConstraints().clear();
 
         this.gridPane.setGridLinesVisible(true);
+        this.gridPane.setAlignment(Pos.CENTER);
 
         this.drawXY();
         this.drawXAxis();

@@ -12,9 +12,9 @@ public class WriteToCSV {
             "Most popular genotype", "Average energy", "Average life length"};;
 
 
-    public WriteToCSV(String name) throws IOException {
+    public WriteToCSV(String name, int numOfSimulation) throws IOException {
         this.fileName=name;
-        String newFileName = fileName + ".csv";
+        String newFileName = fileName + numOfSimulation + ".csv";
         this.newFile = new File(newFileName);
         this.appendDataToAFile(nameOfColumns, false);
 
