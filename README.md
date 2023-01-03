@@ -15,19 +15,19 @@
 
 ### Parametry w pliku:
 
-- heightOfMap: 20
-- widthOfMap: 20
-- numberOfPlants: 10
-- energyFromPlant: 20
-- dailyGrowthOfPlants: 5
-- numberOfAnimals: 15
-- initialEnergyOfAnimals: 80
-- energyRequiredToReproduce: 7
-- energyUsedToMakeChild: 6
-- minNumberOfMutations: 0
-- maxNumberOfMutations: 3
-- mutationSelection: 1
-- lengthOfGenotype: 7
+- heightOfMap
+- widthOfMa
+- numberOfPlants
+- energyFromPlant
+- dailyGrowthOfPlants
+- numberOfAnimals
+- initialEnergyOfAnimals
+- energyRequiredToReproduce
+- energyUsedToMakeChild
+- minNumberOfMutations
+- maxNumberOfMutations
+- mutationSelection
+- lengthOfGenotype
 
 
 
