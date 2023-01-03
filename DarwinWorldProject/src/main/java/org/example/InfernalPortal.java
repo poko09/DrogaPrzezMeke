@@ -50,9 +50,6 @@ public class InfernalPortal implements IPositionChangeObserver {
         return false;
     }
 
-    public boolean checkIfPlantIsAtPosition(Vector2d position) {
-        return this.plants.get(position)!= null;
-    }
 
     public boolean checkIfDrawWithEating(Vector2d position) {
         return this.animals.get(position).size() > 1;
@@ -224,23 +221,6 @@ public class InfernalPortal implements IPositionChangeObserver {
         }
     }
 
-
-
-    //HELPER FUNCTION-> DELTE LATER
-    public void listAllAnimals() {
-        for (Map.Entry<Vector2d, ArrayList<Animal>> set : animals.entrySet()) {
-            System.out.println(set.getKey());
-            for (Animal animal : set.getValue()) {
-                System.out.println(animal.toString());
-            }
-        }
-    }
-
-    public String toString() {
-        MapVisualizer mapVisualizer = new MapVisualizer(this);
-//        return mapVisualizer.draw(new Vector2d(0,0),new Vector2d(this.width, this.height));
-        return " ";
-    }
 
 }
 

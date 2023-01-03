@@ -74,18 +74,12 @@ public class Genotype {
         return newGenomtype;
     }
 
-//    public Gen getGenFromGenotype (int index) {
-//        // dodac walidacje czy nie za duzy
-//        return this.arrayOfGens[index];
-//    }
-
     private int getRotationFromSpecificGen(int index) {
         return this.arrayOfGens[index].getRotation();
     }
 
     public void mutateGens() {
         int numOfGensToBeMutated = new Random().nextInt((max_number_of_mutated_gens - min_number_of_mutated_gens + 1) + min_number_of_mutated_gens);
-       // System.out.println( "num of gens to be mutated " + numOfGensToBeMutated);
         ArrayList<Integer> gensModified = new ArrayList<>();
         for (int i = 0; i < numOfGensToBeMutated; i++) {
             while (true) {
@@ -96,7 +90,6 @@ public class Genotype {
                     break;
                 }
             }
-
 
         }
 

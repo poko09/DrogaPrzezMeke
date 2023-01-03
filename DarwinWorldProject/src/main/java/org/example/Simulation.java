@@ -1,5 +1,6 @@
 package org.example;
 
+import gui.Counter;
 import gui.WriteToCSV;
 
 import java.io.IOException;
@@ -21,7 +22,8 @@ public class Simulation implements Runnable {
     private List<IAppObserver> appObserverList;
     private DataSet data;
     private int dayOfSimulation;
-    WriteToCSV csvFile = new WriteToCSV("Map Statistics" );
+    WriteToCSV csvFile;
+    private Counter counter;
 
     public int getNumberOfAnimals() {
         return numberOfAnimals;
@@ -44,7 +46,8 @@ public class Simulation implements Runnable {
         return numOfFreeFields;
     }
 
-    public Simulation(InfernalPortal map, DataSet data) throws IOException {
+    public Simulation(InfernalPortal map, DataSet data, Counter counter) throws IOException {
+        this.csvFile= new WriteToCSV("Map Statistics" ,counter.getCount());
         this.STARTING_NUMBER_OF_ANIMALS = data.getNumberOfAnimals();
         this.STARTING_ENERGY_OF_ANIMAL = data.getInitialEnergyOfAnimals();
         this.STARTING_NUMBER_OF_PLANTS = data.getNumberOfPlants();
@@ -58,7 +61,7 @@ public class Simulation implements Runnable {
         this.numberOfPlants = STARTING_NUMBER_OF_PLANTS;
         this.appObserverList = new ArrayList<>();
         this.dayOfSimulation=0;
-
+        this.counter = counter;
 
 
     }
@@ -112,13 +115,9 @@ public class Simulation implements Runnable {
         int width = this.map.getWidth();
         int height = this.map.getHeight();
 
-        //int insideEquatoria = (int) (0.8 * numberOfPlants); //preferred place to growth
-       // int outsideEquatoria = numberOfPlants - insideEquatoria;
-
         int upperEquatoria = (int) (0.6 * height);
         int lowerEqatoria = (int)(0.4 * height);
 
-        //        toDo zdekomponuj
         for (int i=0; i < numberOfPlants;i++) {
             int randomNum = rand.nextInt(5);
             System.out.println("random num " + randomNum);
