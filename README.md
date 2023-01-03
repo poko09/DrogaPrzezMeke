@@ -9,9 +9,9 @@
 
 ### Wariant:
 
-- mapa: 1 wariant -> piekielny portal
-- roślinki: 2 warianty -> zalesione równiki, toksyczne trupy
-- zachowanie: 1 wariant -> pełna predestynacja
+- mapa: 1 wariant -> piekielny portal 🗺️
+- roślinki: 2 warianty -> zalesione równiki 🌳, toksyczne trupy 🌵
+- zachowanie: 1 wariant -> pełna predestynacja 🙏
 
 ### Parametry w pliku:
 
