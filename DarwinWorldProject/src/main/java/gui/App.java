@@ -59,7 +59,7 @@ public class App extends Application implements IAppObserver{
         Button startNewSimulation = new Button("Start New");
         allButtonshbBox.setSpacing(10.0);
         allButtonshbBox.setAlignment(Pos.BOTTOM_CENTER);
-        allButtonshbBox.getChildren().addAll(stopButton,resumeButton, stopTrackingButton, genotypeButton);
+        allButtonshbBox.getChildren().addAll(stopButton,resumeButton, stopTrackingButton, genotypeButton, startNewSimulation);
 
         this.setButtonFunctions(stopButton,resumeButton, stopTrackingButton, genotypeButton, startNewSimulation);
 
