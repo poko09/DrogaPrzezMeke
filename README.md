@@ -1,4 +1,4 @@
-# PiekielnyPortal
+# Symulacja świata Darwinowskiego - "Droga przez Meke"
 
 
 ### Autorzy:
@@ -9,7 +9,7 @@
 
 ### Wariant:
 
-- mapa: 1 wariant -> kula ziemska
+- mapa: 1 wariant -> piekielny portal
 - roślinki: 2 warianty -> zalesione równiki, toksyczne trupy
 - zachowanie: 1 wariant -> pełna predestynacja
 
@@ -28,4 +28,6 @@
 - maxNumberOfMutations: 3
 - mutationSelection: 1
 - lengthOfGenotype: 7
+
+
 
