@@ -36,7 +36,7 @@ Evolutionary generator simulating a Darwinian world
 
 
 
-https://user-images.githubusercontent.com/71036264/227965229-3f0d07a2-dbf6-443d-8418-a33cc509629f.mp4
+![darwin_world_sim](https://user-images.githubusercontent.com/71036264/227965753-dac27a52-e209-4525-82d2-e42e9c257d65.gif)
 
 
 
