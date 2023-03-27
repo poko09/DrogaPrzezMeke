@@ -12,7 +12,7 @@
 <br> </br>
 ### Description:
 
-Evolutionary generator simulating a Darwinian world
+"Evolutionary generator simulating a Darwinian world". In this project we created a special world for animals, whose main idea is to survive and spread their genotype. Only the best one will survive :) 
 
 <br> </br>
 ### Parameters:
