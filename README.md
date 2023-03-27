@@ -49,7 +49,7 @@
 
 <br> </br>
 
-In addition, in the project was added author's music, which makes time more pleasant while admiring the world of virtual animals and plants :)
+Additionally, in the project was added author's music, which makes time more pleasant while admiring the world of virtual animals and plants :)
 
 
 
