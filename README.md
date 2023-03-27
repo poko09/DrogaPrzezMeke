@@ -49,7 +49,5 @@
 
 <br> </br>
 
-Additionally, in the project was added author's music, which makes time more pleasant while admiring the world of virtual animals and plants :)
-
-
+In addition, author's music was added to the project, which makes time more pleasant while admiring the world of virtual animals and plants :)
 
