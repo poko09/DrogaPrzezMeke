@@ -33,12 +33,17 @@ Evolutionary generator simulating a Darwinian world
 
 <br> </br>
 
+### GUI
+  
+- opening window
+  
+  <img width="626" alt="opening_window" src="https://user-images.githubusercontent.com/71036264/227969424-bf08ef00-0de6-4dee-812e-555244699695.png">
 
-
-
-![darwin_world_sim](https://user-images.githubusercontent.com/71036264/227965753-dac27a52-e209-4525-82d2-e42e9c257d65.gif)
-
-
+  
+- visualization of simulations
+  
+  
+  ![simulation](https://user-images.githubusercontent.com/71036264/227970095-ff08e34a-518f-49f1-a805-d49f0ec9094e.gif)
 
 
 
