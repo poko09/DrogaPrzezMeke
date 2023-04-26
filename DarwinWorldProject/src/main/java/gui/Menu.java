@@ -30,7 +30,7 @@ public class Menu extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        music();
+        //music();
         VBox root = new VBox(50);
 
         Text welcomeText = new Text();
