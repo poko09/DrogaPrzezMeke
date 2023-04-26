@@ -1,27 +1,21 @@
-# Symulacja świata Darwinowskiego - "Droga przez Meke"
+# Darwin World Simulation - "Droga przez Meke"
 
 
-### Autorzy:
+### Authors:
 
-- Agata Dratwa (adratwa)
 - Karol Augustyniak (poko09)
+- Agata Dratwa (adratwa)
 
-<b>Informatyka - Data Science<b>
+
+<b>Computer Science - Data Science<b>
+<b>AGH UST<b>
 <br> </br>
-### Opis:
+### Description:
 
-Projekt - generator ewolucyjny, zawierający symulację świata Darwinowskiego
-
-<br> </br>
-### Wariant:
-
-- mapa: 1 wariant -> piekielny portal 🗺️
-- roślinki: 2 warianty -> zalesione równiki 🌳, toksyczne trupy 🌵
-- zachowanie: 1 wariant -> pełna predestynacja 🙏
-
+"Evolutionary generator simulating a Darwinian world". In this project we created a special world for animals, whose main idea is to survive and spread their genotype. Only the best one will survive :) 
 
 <br> </br>
-### Parametry w pliku:
+### Parameters:
 
 - heightOfMap 
 - widthOfMap
@@ -39,4 +33,21 @@ Projekt - generator ewolucyjny, zawierający symulację świata Darwinowskiego
 
 <br> </br>
 
-Dodatkowo w projekcie została dodana autorska muzyczka, która umila czas podczas podziwiana świata wirtualnych zwierzątek i roślinek :)
+### GUI
+  
+- opening window
+  
+  <img width="626" alt="opening_window" src="https://user-images.githubusercontent.com/71036264/227969424-bf08ef00-0de6-4dee-812e-555244699695.png">
+
+  
+- visualization of simulations
+  
+  
+  ![simulation](https://user-images.githubusercontent.com/71036264/227970095-ff08e34a-518f-49f1-a805-d49f0ec9094e.gif)
+
+
+
+<br> </br>
+
+In addition, author's music was added to the project, which makes time more pleasant while admiring the world of virtual animals and plants :)
+
